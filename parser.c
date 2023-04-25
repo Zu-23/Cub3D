@@ -19,6 +19,13 @@ typedef struct s_texture
 	char	dest[200];
 }t_texture;
 
+typedef struct s_var
+{
+	int	i;
+	int	j;
+	int	k;
+}t_var;
+
 typedef struct s_color
 {
 	char	id[2];
@@ -35,8 +42,9 @@ typedef struct s_data
 	t_texture	we;
 	t_color		f;
 	t_color		c;
-	// char		map[HEIGHT][WEIDTH]
-
+	char		map[1024][1024];
+	int			height;
+	int			width;
 }t_data;
 
 int	ft_error(char *str)
@@ -50,7 +58,7 @@ int	ft_isspace(int c)
 	return ((c == '\f') || (c == '\r') || (c == '\t') || (c == '\v'));
 }
 
-int	fill_texture(char *line, t_texture texture)
+int	fill_texture(char *line, t_texture texture, int *success)
 {
 	char	*after_xpm;
 
@@ -66,6 +74,7 @@ int	fill_texture(char *line, t_texture texture)
 	printf("id: %s\ndest: %s\n", texture.id, texture.dest);
 	if (texture.dest == NULL || ft_strstr(texture.dest, ".xpm") == NULL)
 		return (-1);
+	*success = 1;
 	return (0);
 }
 
@@ -75,6 +84,8 @@ int	check_rgb(char *rgb)
 
 	i = 0;
 	printf("RGB: %s\n", rgb);
+	if (rgb == NULL)
+		return (-1);
 	while (rgb[i])
 	{
 		//printf("rgb |%c|\n",rgb[i]);
@@ -85,7 +96,7 @@ int	check_rgb(char *rgb)
 	return (0);
 }
 
-int	fill_color(char *line, t_color color)
+int	fill_color(char *line, t_color color, int *success)
 {
 	char	*rgb[3];
 	int		i;
@@ -104,67 +115,123 @@ int	fill_color(char *line, t_color color)
 	if ((color.red < 0 || color.red > 255)
 		|| (color.green < 0 || color.green > 255)
 		|| (color.blue < 0 || color.blue > 255))
-		return (-1); 
-
+		return (-1);
+	*success = 1;
 	printf("id %s red %d green %d blue %d\n", color.id,color.red, color.green, color.blue);
 	return (0);
 }
 
-int	parse_color(char *line, t_data *data)
+int	parse_color(char *line, t_data *data, int *success)
 {
 	if (line[0] == 'C' && line[1] == ' ')
 	{
-		if (fill_color(line, data->c))
+		if (fill_color(line, data->c, success))
 			return (-1);
 	}
 	else if (line[0] == 'F' && line[1] == ' ')
 	{
-		if (fill_color(line, data->f))
+		if (fill_color(line, data->f, success))
 			return (-1);
 	}
 	return (0);
 }
 
-int	parse_texture(char *line, t_data *data)
+int	parse_texture(char *line, t_data *data, int *success)
 {
 	if (line[0] == 'N' && line[1] == 'O')
 	{
-		if (fill_texture(line, data->no))
+		if (fill_texture(line, data->no, success))
 			return (-1);
 	}
 	else if (line[0] == 'S' && line[1] == 'O')
 	{
-		if (fill_texture(line, data->so))
+		if (fill_texture(line, data->so, success))
 			return (-1);
 	}
 	else if (line[0] == 'E' && line[1] == 'A')
 	{
-		if (fill_texture(line, data->ea))
+		if (fill_texture(line, data->ea, success))
 			return (-1);
 	}
 	else if (line[0] == 'W' && line[1] == 'E')
 	{
-		if (fill_texture(line, data->we))
+		if (fill_texture(line, data->we, success))
 			return (-1);
 	}
 	return (0);
 }
 
-int	parse_map(char *line, t_data *data)
+int check_valid(char *line)
 {
-	int	i;
+    char *content = "01NSWE";
+    int  i;
 
-	i = 0;
-	while (line[i] == ' ')
+    i = 0;
+    while (*line && *line != '\n')
+    {
+        while (*line == ' ')
+            line++;
+        while (content[i] && content[i++] != *line);
+        if (content[i] == '\0')
+		{
+			printf("line %d", *line);
+            return (-1);
+		}
+        i = 0;
+        line++;
+    }
+    return (0);
+}
+
+int	parse_map(char *line, t_data *data, char *content)
+{
+	char	*str;
+	t_var   var;
+
+	var.i = 0;
+    var.j = 0;
+    var.k = 0;
+    if (check_valid(line))
+	{
+		printf("map parsing %s\n", line);
+        return (-1);
+	}
+    str = malloc(sizeof(ft_strlen(line) + 1));
+	printf("size is %d\n", ft_strlen(line));
+    if (!str)
+        return (-1);
+	int len = ft_strlen(line);
+	while (var.j < 26)
+	{
+		while (line[var.i] == ' ')
+            var.i++;
+		if (line[var.i] != '\n')
+		{
+			
+        	str[var.j++] = line[var.i++];
+		}
+	}
+    // str[var.j] = '\0';
+	// printf("%s", str);
+	return (0);
 }
 
 int	evaluate_parse_functions(char *line, t_data *data)
 {
-	if (parse_texture(line, data))
+	int	success;
+
+	success = 0;
+	if (line[0] == '\n')
+		return (0);
+	if (parse_texture(line, data, &success))
 		return (-1);
-	if (parse_color(line, data))
+	if (success == 1)
+		return (0);
+	if (parse_color(line, data, &success))
 		return (-1);
-	if (parse_map(line, data))
+	if (success == 1)
+		return (0);
+	if(parse_map(line, data, "01NSWE"))
 		return (-1);
 	return (0);
 }
@@ -200,6 +267,8 @@ int main(int ac, char **av)
 	t_data	data;
 	int		fd;
 
+	data.height = 0;
+	data.width = 0;
 	if (ac == 2)
 	{
 		fd = open(av[1], O_RDONLY);
@@ -214,4 +283,6 @@ int main(int ac, char **av)
 //1- we check if the line is valid (valid means it contains only 0 1 N,S,E,W)
 //2- remove any spaces in the line
 //3- save the line in the map element
-//4- 
+//4- loop over the map to count its height
+//5- check the map is closed
+//SS
