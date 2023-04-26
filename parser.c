@@ -58,7 +58,7 @@ int	ft_isspace(int c)
 	return ((c == '\f') || (c == '\r') || (c == '\t') || (c == '\v'));
 }
 
-int	fill_texture(char *line, t_texture texture, int *success)
+int	fill_texture(char *line, t_texture *texture, int *success)
 {
 	char	*after_xpm;
 
@@ -69,10 +69,12 @@ int	fill_texture(char *line, t_texture texture, int *success)
 			return (-1);
 		after_xpm++;
 	}
-	ft_strcpy(texture.id, ft_strtok(line, " "));
-	ft_strcpy(texture.dest, ft_strtok(NULL, " \n"));
-	printf("id: %s\ndest: %s\n", texture.id, texture.dest);
-	if (texture.dest == NULL || ft_strstr(texture.dest, ".xpm") == NULL)
+	if (texture->id[0] != '\0')
+		return (-1);
+	ft_strcpy(texture->id, ft_strtok(line, " "));
+	ft_strcpy(texture->dest, ft_strtok(NULL, " \n"));
+	printf("id: %s\ndest: %s\n", texture->id, texture->dest);
+	if (texture->dest == NULL || ft_strstr(texture->dest, ".xpm") == NULL)
 		return (-1);
 	*success = 1;
 	return (0);
@@ -83,12 +85,11 @@ int	check_rgb(char *rgb)
 	int	i;
 
 	i = 0;
-	printf("RGB: %s\n", rgb);
+	//printf("RGB: %s\n", rgb);
 	if (rgb == NULL)
 		return (-1);
 	while (rgb[i])
 	{
-		//printf("rgb |%c|\n",rgb[i]);
 		if (ft_isdigit(rgb[i]) == 0)
 			return (-1);
 		i++;
@@ -96,28 +97,30 @@ int	check_rgb(char *rgb)
 	return (0);
 }
 
-int	fill_color(char *line, t_color color, int *success)
+int	fill_color(char *line, t_color *color, int *success)
 {
 	char	*rgb[3];
 	int		i;
 
-	i = 0;	
-	ft_strcpy(color.id, ft_strtok(line, " "));
+	i = 0;
+	if (color->id[0] != '\0')
+		return (-1);
+	ft_strcpy(color->id, ft_strtok(line, " "));
 	while (i < 3)
 	{
 		rgb[i] = ft_strtok(NULL, " ,\n");
 		if (check_rgb(rgb[i++]))
 			return (-1);
 	}
-	color.red = ft_atoi(rgb[0]);
-	color.green = ft_atoi(rgb[1]);
-	color.blue = ft_atoi(rgb[2]);
-	if ((color.red < 0 || color.red > 255)
-		|| (color.green < 0 || color.green > 255)
-		|| (color.blue < 0 || color.blue > 255))
+	color->red = ft_atoi(rgb[0]);
+	color->green = ft_atoi(rgb[1]);
+	color->blue = ft_atoi(rgb[2]);
+	if ((color->red < 0 || color->red > 255)
+		|| (color->green < 0 || color->green > 255)
+		|| (color->blue < 0 || color->blue > 255))
 		return (-1);
 	*success = 1;
-	printf("id %s red %d green %d blue %d\n", color.id,color.red, color.green, color.blue);
+	printf("id %s red %d green %d blue %d\n", color->id,color->red, color->green, color->blue);
 	return (0);
 }
 
@@ -125,12 +128,12 @@ int	parse_color(char *line, t_data *data, int *success)
 {
 	if (line[0] == 'C' && line[1] == ' ')
 	{
-		if (fill_color(line, data->c, success))
+		if (fill_color(line, &data->c, success))
 			return (-1);
 	}
 	else if (line[0] == 'F' && line[1] == ' ')
 	{
-		if (fill_color(line, data->f, success))
+		if (fill_color(line, &data->f, success))
 			return (-1);
 	}
 	return (0);
@@ -140,45 +143,48 @@ int	parse_texture(char *line, t_data *data, int *success)
 {
 	if (line[0] == 'N' && line[1] == 'O')
 	{
-		if (fill_texture(line, data->no, success))
+		if (fill_texture(line, &data->no, success))
 			return (-1);
 	}
 	else if (line[0] == 'S' && line[1] == 'O')
 	{
-		if (fill_texture(line, data->so, success))
+		if (fill_texture(line, &data->so, success))
 			return (-1);
 	}
 	else if (line[0] == 'E' && line[1] == 'A')
 	{
-		if (fill_texture(line, data->ea, success))
+		if (fill_texture(line, &data->ea, success))
 			return (-1);
 	}
 	else if (line[0] == 'W' && line[1] == 'E')
 	{
-		if (fill_texture(line, data->we, success))
+		if (fill_texture(line, &data->we, success))
 			return (-1);
 	}
 	return (0);
 }
 
-int check_valid(char *line)
+int check_valid_line(char *line)
 {
-    char *content = "01NSWE";
-    int  i;
+    char *content;
+    int i;
+	int	j;	
 
     i = 0;
-    while (*line && *line != '\n')
+	j = 0;
+	content = "01NSWE";
+    while (line[j] && line[j] != '\n')
     {
-        while (*line == ' ')
-            line++;
-        while (content[i] && content[i++] != *line);
+        while (line[j] == ' ')
+            j++;
+        while (content[i] && content[i++] != line[j]);
         if (content[i] == '\0')
 		{
-			printf("line %d", *line);
+			printf("check valid line %d", line[j]);
             return (-1);
 		}
         i = 0;
-        line++;
+        j++;
     }
     return (0);
 }
@@ -191,30 +197,40 @@ int	parse_map(char *line, t_data *data, char *content)
 	var.i = 0;
     var.j = 0;
     var.k = 0;
-    if (check_valid(line))
+    if (check_valid_line(line))
 	{
 		printf("map parsing %s\n", line);
         return (-1);
 	}
-    str = malloc(sizeof(ft_strlen(line) + 1));
-	printf("size is %d\n", ft_strlen(line));
-    if (!str)
-        return (-1);
+	//printf("boooga\n");
+    str = malloc(ft_strlen(line) + 1);
 	int len = ft_strlen(line);
-	while (var.j < 26)
-	{
-		while (line[var.i] == ' ')
-            var.i++;
-		if (line[var.i] != '\n')
-		{
-			
-        	str[var.j++] = line[var.i++];
-		}
-	}
+	memset(str, 'a', len);
+	str[len] = '\0';
+	// printf("str %s\n", str);
+    // if (!str)
+    //     return (-1);
+	// int len = ft_strlen(line);
+	// while (line[var.i])
+	// {
+	// 	while (line[var.i] == ' ')
+	// 	{
+    //         var.i++;
+	// 	}
+	// 	if (line[var.i] == '\n')
+	// 	{
+	// 		printf("found new line\n");
+	// 		break ;
+	// 	}
+	// 	str[var.j++] = line[var.i++]; //1 1   \n
+	// }
+	// printf("null? %d ", line[var.i]);
     // str[var.j] = '\0';
 	// printf("%s", str);
 	return (0);
 }
+
+
 
 int	evaluate_parse_functions(char *line, t_data *data)
 {
@@ -231,8 +247,9 @@ int	evaluate_parse_functions(char *line, t_data *data)
 		return (-1);
 	if (success == 1)
 		return (0);
-	if(parse_map(line, data, "01NSWE"))
-		return (-1);
+	// if(parse_map(line, data, "01NSWE"))
+	// 	return (-1);
+	//check in the end if all the data is filled
 	return (0);
 }
 
@@ -250,16 +267,26 @@ int	parse_file(int fd, t_data *data)
 		if (evaluate_parse_functions(line, data))
 		{
 			error = -2;
+			free(line);
 			break ;
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
-	free(line);
 	close(fd);
 	if (error)
 		ft_error("Error\nin file parsing\n");
 	return (0);
+}
+
+int	check_data(t_data *data)
+{
+	if (!data->ea.id[0] || !data->no.id[0]
+		|| !data->so.id[0] || !data->we.id[0])
+		ft_error("Error\nincorrect file input\n");
+	if (!data->c.id[0] || !data->f.id[0])
+		ft_error("Error\nincorrect file input\n");
+
 }
 
 int main(int ac, char **av)
@@ -267,12 +294,12 @@ int main(int ac, char **av)
 	t_data	data;
 	int		fd;
 
-	data.height = 0;
-	data.width = 0;
+	ft_memset(&data, 0, sizeof(t_data));
 	if (ac == 2)
 	{
 		fd = open(av[1], O_RDONLY);
 		parse_file(fd, &data);
+		check_data(&data);
 	}
 	else
 		ft_error("Error\nwrong number of arguments\n");
