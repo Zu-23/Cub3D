@@ -164,7 +164,7 @@ int	parse_texture(char *line, t_data *data, int *success)
 	return (0);
 }
 
-int check_valid_line(char *line)
+int check_valid_line(char *line, t_data *data)
 {
     char *content;
     int i;
@@ -173,16 +173,17 @@ int check_valid_line(char *line)
     i = 0;
 	j = 0;
 	content = "01NSWE";
+	if (!data->ea.id[0] || !data->no.id[0]
+		|| !data->so.id[0] || !data->we.id[0]
+		|| !data->c.id[0] || !data->f.id[0])
+			return (-1);
     while (line[j] && line[j] != '\n')
     {
         while (line[j] == ' ')
             j++;
         while (content[i] && content[i++] != line[j]);
         if (content[i] == '\0')
-		{
-			printf("check valid line %d", line[j]);
             return (-1);
-		}
         i = 0;
         j++;
     }
@@ -197,36 +198,22 @@ int	parse_map(char *line, t_data *data, char *content)
 	var.i = 0;
     var.j = 0;
     var.k = 0;
-    if (check_valid_line(line))
-	{
-		printf("map parsing %s\n", line);
+    if (check_valid_line(line, data))
         return (-1);
-	}
-	//printf("boooga\n");
     str = malloc(ft_strlen(line) + 1);
+    if (!str)
+        return (-1);
 	int len = ft_strlen(line);
-	memset(str, 'a', len);
-	str[len] = '\0';
-	// printf("str %s\n", str);
-    // if (!str)
-    //     return (-1);
-	// int len = ft_strlen(line);
-	// while (line[var.i])
-	// {
-	// 	while (line[var.i] == ' ')
-	// 	{
-    //         var.i++;
-	// 	}
-	// 	if (line[var.i] == '\n')
-	// 	{
-	// 		printf("found new line\n");
-	// 		break ;
-	// 	}
-	// 	str[var.j++] = line[var.i++]; //1 1   \n
-	// }
-	// printf("null? %d ", line[var.i]);
-    // str[var.j] = '\0';
-	// printf("%s", str);
+	while (line[var.i] && line[var.i] != '\n')
+	{
+		while (line[var.i] == ' ')
+            var.i++;
+		str[var.j++] = line[var.i++];
+	}
+    str[var.j] = '\0';
+	ft_strcpy(data->map[data->height++], str);
+	// printf("map: %s\n", data->map[data->height-1]);
+	free(str);
 	return (0);
 }
 
@@ -247,9 +234,8 @@ int	evaluate_parse_functions(char *line, t_data *data)
 		return (-1);
 	if (success == 1)
 		return (0);
-	// if(parse_map(line, data, "01NSWE"))
-	// 	return (-1);
-	//check in the end if all the data is filled
+	if(parse_map(line, data, "01NSWE"))
+		return (-1);
 	return (0);
 }
 
@@ -279,14 +265,55 @@ int	parse_file(int fd, t_data *data)
 	return (0);
 }
 
-int	check_data(t_data *data)
+int	check_player_position(t_data *data)
+{
+	t_var	var;
+	int		p_pos;
+
+	var.i = 0;
+	var.j = 0;
+	p_pos = 0;
+	while (var.j < data->height)
+	{
+		while (data->map[var.j][var.i])
+		{
+			if (data->map[var.j][var.i] != '0'
+			&& data->map[var.j][var.i] != '1')
+			{
+				if (p_pos == 0)
+					p_pos = 1;
+				else
+					return (-1);
+			}
+			var.i++;
+		}
+		var.j++;
+		var.i = 0;
+	}
+	return (0);
+}
+
+int	check_map(t_data *data)
+{
+	t_var	var;
+	int		p_pos;
+
+	var.i = 0;
+	var.j = 0;
+	if (check_player_position(data))
+		return (-1);
+	return (0);
+}
+
+void	check_data(t_data *data)
 {
 	if (!data->ea.id[0] || !data->no.id[0]
 		|| !data->so.id[0] || !data->we.id[0])
-		ft_error("Error\nincorrect file input\n");
+		ft_error("Error\nincorrect walls texture inputs\n");
 	if (!data->c.id[0] || !data->f.id[0])
-		ft_error("Error\nincorrect file input\n");
-
+		ft_error("Error\nincorrect floor or ceiling inputs\n");
+	if (check_map(data))
+		ft_error("Error\nincorrect map inputs\n");
 }
 
 int main(int ac, char **av)
@@ -299,6 +326,7 @@ int main(int ac, char **av)
 	{
 		fd = open(av[1], O_RDONLY);
 		parse_file(fd, &data);
+		printf("map height %d\n", data.height);
 		check_data(&data);
 	}
 	else
