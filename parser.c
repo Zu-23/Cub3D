@@ -293,14 +293,36 @@ int	check_player_position(t_data *data)
 	return (0);
 }
 
-int	check_map(t_data *data)
+int	check_closed_walls(t_data *data)
 {
 	t_var	var;
-	int		p_pos;
 
 	var.i = 0;
 	var.j = 0;
-	if (check_player_position(data))
+	while (data->map[0][var.i])
+	{
+		if (data->map[0][var.i++] != '1')
+			return (-1);
+	}
+	var.i = 0;
+	while (data->map[data->height - 1][var.i])
+	{
+		if (data->map[data->height - 1][var.i++] != '1')
+			return (-1);
+	}
+	while (var.j < data->height)
+	{
+		if (data->map[var.j][0] != '1'
+		|| data->map[var.j][ft_strlen(data->map[var.j]) - 1] != '1')
+			return (-1);
+		var.j++;
+	}
+	return (0);
+}
+
+int	check_map(t_data *data)
+{
+	if (check_player_position(data) || check_closed_walls(data))
 		return (-1);
 	return (0);
 }
