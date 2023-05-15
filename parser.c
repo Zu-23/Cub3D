@@ -44,7 +44,14 @@ typedef struct s_data
 	t_color		c;
 	char		map[1024][1024];
 	int			height;
-	int			width;
+	int			px;
+	int			py;
+	int			p_height;
+	int			p_fov;
+	int			p_distance;
+	int			plane_height;
+	int			plane_width;
+	int			
 }t_data;
 
 int	ft_error(char *str)
