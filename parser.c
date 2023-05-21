@@ -1,8 +1,10 @@
 #include "42-functions/LIBFT_42/libft.h"
 #include "42-functions/Get_next_line_42/get_next_line.h"
 #include <fcntl.h>
-#include <stdio.h>
+#include <math.h>
+
 //delete later
+#include <stdio.h>
 #include<string.h>
 #include<stdlib.h>
 
@@ -13,6 +15,33 @@ DATA:
 	3- CEILING COLOR: IT HAS 4 ARGUMENTS *ID *RED *GREEN *BLUE
 	4- MAP
 */
+
+#define	GRID			64
+#define PLAYER_HEIGHT	32
+#define PLANE_HEIGHT	1024
+#define PLANE_WIDTH		1024
+#define PLAYER_DISTANCE	(1024 / 2) / tan(30)
+#define	FOV				60
+#define PLANE_CENTERX	1024 / 2
+#define	PLANE_CENTERY	1024 / 2
+#define	RAY_ANGLE		60/1024
+
+typedef struct s_raycast
+{
+	float	radian;
+	int		hx;
+	int		hy;
+	int		vx;
+	int		vy;
+	int		sin_ang;
+	int		cos_ang;
+	int		tan_ang;
+	int		next_h;
+	int		next_v;
+	int		dist_h;
+	int		dist_v;
+}t_rcst;
+
 typedef struct s_texture
 {
 	char	id[3];
@@ -46,12 +75,15 @@ typedef struct s_data
 	int			height;
 	int			px;
 	int			py;
-	int			p_height;
-	int			p_fov;
-	int			p_distance;
+	int			player_height;
+	int			player_fov;
+	int			player_plane_distance;
+	int			player_angle;
 	int			plane_height;
 	int			plane_width;
-	int			
+	int			plane_center_x;
+	int			plane_center_y;
+	int			ray_angle;
 }t_data;
 
 int	ft_error(char *str)
@@ -345,6 +377,120 @@ void	check_data(t_data *data)
 		ft_error("Error\nincorrect map inputs\n");
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////
+// //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////
+// //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////
+// //// // // // / ///// ///// RAYCASTER STARTS HERE! RAYCASTER STARTS HERE // //// // // // / ///// /////
+
+
+
+
+void	check_player_angle(char p, t_data *data)
+{
+	if (p == 'E')
+		data->player_angle = 0;
+	else if (p == 'N')
+		data->player_angle = 90;
+	else if (p == 'W')
+		data->player_angle = 180;
+	else if (p == 'S')
+		data->player_angle = 270;
+	return ;
+}
+
+void	find_player_location(t_data *data)
+{
+	t_var var;
+
+	var.j = 0;
+	while (var.j < data->height)
+	{
+		var.i = 0;
+		while (data->map[var.j][var.i])
+		{
+			if (ft_strchr("NSWE", data->map[var.j][var.i]))
+			{
+				data->px = var.i * GRID - 32;
+				data->py = var.j * GRID - 32;
+				check_player_angle(*(ft_strchr("NSWE", data->map[var.j][var.i])), data);
+				return;
+			}
+			var.i++;
+		}
+		var.j++;
+	}
+}
+
+int	data_init(t_data *data)//might not be needed since we defined macros 
+{
+	ft_memset(data, 0, sizeof(t_data));
+	data->plane_height = 1024;
+	data->plane_width = 1024;
+}
+
+
+int	find_intersection(int iter_ray, int column, t_data *data)
+{
+	t_rcst ray;
+
+	ray.radian = iter_ray * 3.14 / 180.0 - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
+	ray.cos_ang = cos(ray.radian);
+	ray.sin_ang = sin(ray.radian);
+	ray.tan_ang = ray.sin_ang / ray.cos_ang;
+	if (-ray.sin_ang < 0)
+		ray.hy = (data->py / GRID) * GRID - 1;
+	else
+		ray.hy = floor(data->py / GRID) * GRID + GRID;
+	ray.hx = data->px + (data->py - ray.hy) / ray.tan_ang;
+	if (ray.cos_ang < 0)
+		floor(data->px / GRID) * GRID - 1;
+	else
+		floor(data->px / GRID) * GRID + GRID;
+	ray.vy = data->py + (data->px - ray.vx) * ray.tan_ang;
+	ray.next_h = fabs(GRID / ray.sin_ang);
+	ray.next_v = fabs(GRID / ray.cos_ang);
+	ray.dist_h = sqrt((data->px - ray.hx) * (data->px - ray.hx) +
+	(data->py - ray.hy) * (data->py - ray.hy));
+	ray.dist_v = sqrt((data->px - ray.vx) * (data->px - ray.vx) +
+	(data->py - ray.vy) * (data->py - ray.vy));
+}
+
+int	raycasting(t_data *data)
+{
+	int	iter_ray;
+	int	col;
+	iter_ray = data->player_angle - (FOV / 2);
+	col = 0;
+	while (col < PLANE_WIDTH)
+	{
+		find_intersection(iter_ray, col, data);
+		col++;
+		iter_ray += RAY_ANGLE;
+	}
+}
+
+
+
 int main(int ac, char **av)
 {
 	t_data	data;
@@ -357,6 +503,8 @@ int main(int ac, char **av)
 		parse_file(fd, &data);
 		printf("map height %d\n", data.height);
 		check_data(&data);
+		find_player_location(&data);
+		printf("player x %d y %d angle %d\n", data.px, data.py, data.player_angle);
 	}
 	else
 		ft_error("Error\nwrong number of arguments\n");
