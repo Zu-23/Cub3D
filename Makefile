@@ -2,24 +2,29 @@ NAME :=		cube3D
 
 CC :=		gcc
 FLAGS :=	-Wall -Wextra -Werror
-DIR :=		minilibx-linux
-LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
-LIBFT :=	42-functions/LIBFT_42/libft.a
-GNL	:=		42-functions/Get_next_line_42/get_next_line.o
-SRC :=		main.c
+#DIR :=		minilibx-linux
+#LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
+LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
+LIBFT :=	lib_gnl/lib/libft.a
+GNL	:=		lib_gnl/gnl/get_next_line.o
+SRC :=		parser.c raycaster.c main.c
 OBJ	:=		$(SRC:.c=.o)
 
 all: $(NAME)
-#dont forget making rule for the OBJ
-$(NAME): $(LIBFT) $(GNL)
-	@$(CC) $(FLAGS) main.c $(LIBS) $(LIBFT) $(GNL) -o $(NAME)
+
+$(NAME): $(LIBFT) $(GNL) $(OBJ)
+	$(CC) $(FLAGS) $(OBJ) $(LIBS2) $(LIBFT) $(GNL) -o $(NAME)
 	@echo "build complete!"
+
+%.o: %.c cub3d.h
+	$(CC) $(FLAGS) -c $< -o $@
+
 $(LIBFT) :
-	@$(MAKE) -C 42-functions/LIBFT_42 --quiet
+	@$(MAKE) -C lib_gnl/lib --quiet
 $(GNL) :
-	@$(MAKE) -C 42-functions/Get_next_line_42 --quiet
+	@$(MAKE) -C lib_gnl/gnl --quiet
 clean:
-	@rm -f 
+	@rm -f $(OBJ) $(GNL) $(LIBFT)
 
 fclean: clean
 	@rm -f $(NAME)
