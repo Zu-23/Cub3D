@@ -24,7 +24,8 @@ $(LIBFT) :
 $(GNL) :
 	@$(MAKE) -C lib_gnl/gnl --quiet
 clean:
-	@rm -f $(OBJ) $(GNL) $(LIBFT)
+	@rm -f $(OBJ) $(GNL)
+	@$(MAKE) -C lib_gnl/lib clean --quiet
 
 fclean: clean
 	@rm -f $(NAME)
