@@ -28,18 +28,18 @@ DATA:
 
 typedef struct s_raycast
 {
-	float	radian;
-	int		hx;
-	int		hy;
-	int		vx;
-	int		vy;
-	int		sin_ang;
-	int		cos_ang;
-	int		tan_ang;
-	int		next_h;
-	int		next_v;
-	int		dist_h;
-	int		dist_v;
+	float		radian;
+	int			hx;
+	int			hy;
+	int			vx;
+	int			vy;
+	int			sin_ang;
+	int			cos_ang;
+	int			tan_ang;
+	double		next_h;
+	double		next_v;
+	int			dist_h;
+	int			dist_v;
 }t_rcst;
 
 typedef struct s_texture
@@ -396,7 +396,7 @@ void	check_data(t_data *data)
 
 
 
-
+////////////////////////////////	WHATEVER THAT IS ABOVE IS PARSING!!! ///////////////////////////////////////////////
 // //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////
 // //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////
 // //// // // // / ///// /////// //// // // // / ///// /////// //// // // // / ///// /////
@@ -458,7 +458,7 @@ int	find_intersection(int iter_ray, int column, t_data *data)
 	ray.sin_ang = sin(ray.radian);
 	ray.tan_ang = ray.sin_ang / ray.cos_ang;
 	if (-ray.sin_ang < 0)
-		ray.hy = (data->py / GRID) * GRID - 1;
+		ray.hy = floor(data->py / GRID) * GRID - 1;
 	else
 		ray.hy = floor(data->py / GRID) * GRID + GRID;
 	ray.hx = data->px + (data->py - ray.hy) / ray.tan_ang;
@@ -499,22 +499,14 @@ int main(int ac, char **av)
 	ft_memset(&data, 0, sizeof(t_data));
 	if (ac == 2)
 	{
+		////PARSING TEST//////////
 		fd = open(av[1], O_RDONLY);
 		parse_file(fd, &data);
-		printf("map height %d\n", data.height);
 		check_data(&data);
+		//////END OF PARSING TEST/////
 		find_player_location(&data);
 		printf("player x %d y %d angle %d\n", data.px, data.py, data.player_angle);
 	}
 	else
 		ft_error("Error\nwrong number of arguments\n");
 }
-
-
-//plan for parsin the map
-//1- we check if the line is valid (valid means it contains only 0 1 N,S,E,W)
-//2- remove any spaces in the line
-//3- save the line in the map element
-//4- loop over the map to count its height
-//5- check the map is closed
-//SS
