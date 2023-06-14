@@ -1,5 +1,5 @@
-#include "42-functions/LIBFT_42/libft.h"
-#include "42-functions/Get_next_line_42/get_next_line.h"
+#include "lib_gnl/gnl/get_next_line.h"
+#include "lib_gnl/lib/libft.h"
 #include <fcntl.h>
 #include <math.h>
 
