@@ -25,9 +25,9 @@ int	fill_texture(char *line, t_texture *texture, int *success)
 	if (texture->id[0] != '\0')
 		return (-1);
 	ft_strcpy(texture->id, ft_strtok(line, " "));
-	ft_strcpy(texture->dest, ft_strtok(NULL, " \n"));
+	ft_strcpy(texture->dest, ft_strtok(NULL, " \n\r\f\t\v"));
 	printf("id: %s\ndest: %s\n", texture->id, texture->dest);
-	if (texture->dest == NULL || ft_strstr(texture->dest, ".xpm") == NULL)
+	if (!texture->dest || ft_strstr(texture->dest, ".xpm") == NULL)
 		return (-1);
 	*success = 1;
 	return (0);

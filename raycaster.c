@@ -44,7 +44,7 @@ int	data_init(t_data *data) //might not be needed since we defined macros
 	data->plane_width = 1024;
 }
 
-int	find_intersection(int iter_ray, int column, t_data *data)
+void	find_intersection(int iter_ray, int column, t_data *data)
 {
 	t_rcst	ray;
 
