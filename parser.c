@@ -6,10 +6,16 @@ int	ft_error(char *str)
 	exit(1);
 }
 
-int	ft_isspace(int c)
-{
-	return ((c == '\f') || (c == '\r') || (c == '\t') || (c == '\v'));
-}
+// int	skip_spaces(char **line)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (line && *line && (**line == ' ' || **line == '\t' || **line == '\r'
+// 			|| **line == '\v' || **line == '\f' || **line == '\n') && i++)
+// 		(*line)++;
+// 	return (i);
+// }
 
 int	fill_texture(char *line, t_texture *texture, int *success)
 {
@@ -28,7 +34,7 @@ int	fill_texture(char *line, t_texture *texture, int *success)
 	ft_strcpy(texture->dest, ft_strtok(NULL, " \n\r\f\t\v"));
 	printf("id: %s\ndest: %s\n", texture->id, texture->dest);
 	if (!texture->dest || ft_strstr(texture->dest, ".xpm") == NULL)
-		return (-1);
+		return (printf("bruh"), -1);
 	*success = 1;
 	return (0);
 }
@@ -73,7 +79,7 @@ int	fill_color(char *line, t_color *color, int *success)
 		return (-1);
 	*success = 1;
 	printf("id %s red %d green %d blue %d\n", color->id, color->red,
-			color->green, color->blue);
+		color->green, color->blue);
 	return (0);
 }
 
@@ -174,9 +180,14 @@ int	parse_map(char *line, t_data *data, char *content)
 int	evaluate_parse_functions(char *line, t_data *data)
 {
 	int	success;
+	int	i;
 
 	success = 0;
-	if (line[0] == '\n')
+	i = 0;
+	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\r'
+		|| line[i] == '\v' || line[i] == '\f')
+		i++;
+	if (line[i] == '\n')
 		return (0);
 	if (parse_texture(line, data, &success))
 		return (-1);
@@ -331,6 +342,7 @@ int	check_closed_walls(t_data *data)
 	}
 	if (backtrack(data, startrow, startcol))
 		return (-1);
+	return (0);
 }
 
 int	check_map(t_data *data)
