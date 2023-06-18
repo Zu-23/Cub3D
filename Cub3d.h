@@ -75,6 +75,7 @@ typedef struct s_data
 	t_color		f;
 	t_color		c;
 	char		map[1024][1024];
+	int			visited[1024][1024];
 	int			height;
 	int			px;
 	int			py;
