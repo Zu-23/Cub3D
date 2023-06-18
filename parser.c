@@ -160,8 +160,8 @@ int	parse_map(char *line, t_data *data, char *content)
 	len = ft_strlen(line);
 	while (line[var.i] && line[var.i] != '\n')
 	{
-		while (line[var.i] == ' ')
-			var.i++;
+		while (line[var.i] == ' ' && var.i++)
+			str[var.j++] = '0';
 		str[var.j++] = line[var.i++];
 	}
 	str[var.j] = '\0';
@@ -294,13 +294,11 @@ int	backtrack(t_data *data, int row, int col)
 		{
 			if (data->map[newrow][newcol] == '0'
 				&& data->visited[newrow][newcol] == 0)
-			{
 				if (backtrack(data, newrow, newcol))
 					return (free(offset), 1);
-			}
 		}
 		else
-			return (printf("newrow: %d, newcol: %d\n", newrow, newcol), free(offset), 1);
+			return (free(offset), 1);
 	}
 	return (free(offset), 0);
 }
