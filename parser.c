@@ -73,7 +73,7 @@ int	fill_color(char *line, t_color *color, int *success)
 		return (-1);
 	*success = 1;
 	printf("id %s red %d green %d blue %d\n", color->id, color->red,
-		color->green, color->blue);
+			color->green, color->blue);
 	return (0);
 }
 
@@ -125,7 +125,7 @@ int	check_valid_line(char *line, t_data *data)
 
 	i = 0;
 	j = 0;
-	content = "01NSWE";
+	content = "01WESN ";
 	if (!data->ea.id[0] || !data->no.id[0] || !data->so.id[0] || !data->we.id[0]
 		|| !data->c.id[0] || !data->f.id[0])
 		return (-1);
@@ -186,7 +186,7 @@ int	evaluate_parse_functions(char *line, t_data *data)
 		return (-1);
 	if (success == 1)
 		return (0);
-	if (parse_map(line, data, "01NSWE"))
+	if (parse_map(line, data, "01WESN "))
 		return (-1);
 	return (0);
 }
@@ -245,31 +245,94 @@ int	check_player_position(t_data *data)
 	return (0);
 }
 
+// int	check_closed_walls(t_data *data)
+// {
+// 	t_var	var;
+
+// 	var.i = 0;
+// 	var.j = 0;
+// 	while (data->map[0][var.i])
+// 	{
+// 		if (data->map[0][var.i++] != '1')
+// 			return (-1);
+// 	}
+// 	var.i = 0;
+// 	while (data->map[data->height - 1][var.i])
+// 	{
+// 		if (data->map[data->height - 1][var.i++] != '1')
+// 			return (-1);
+// 	}
+// 	while (var.j < data->height)
+// 	{
+// 		if (data->map[var.j][0] != '1'
+// 			|| data->map[var.j][ft_strlen(data->map[var.j]) - 1] != '1')
+// 			return (-1);
+// 		var.j++;
+// 	}
+// 	return (0);
+// }
+
+int	backtrack(t_data *data, int row, int col)
+{
+	int	newrow;
+	int	newcol;
+	int	i;
+	int	*offset;
+
+	data->visited[row][col] = 1;
+	i = -1;
+	offset = malloc(sizeof(int) * 4);
+	offset[0] = 1;
+	offset[1] = -1;
+	offset[2] = 0;
+	offset[3] = 0;
+	while (++i < 4)
+	{
+		newcol = col + offset[i];
+		newrow = row + offset[3 - i];
+		if (data->map[newrow][newcol])
+		{
+			if (data->map[newrow][newcol] == '0'
+				&& data->visited[newrow][newcol] == 0)
+			{
+				if (backtrack(data, newrow, newcol))
+					return (free(offset), 1);
+			}
+		}
+		else
+			return (printf("newrow: %d, newcol: %d\n", newrow, newcol), free(offset), 1);
+	}
+	return (free(offset), 0);
+}
+
 int	check_closed_walls(t_data *data)
 {
-	t_var	var;
+	int	startrow;
+	int	startcol;
+	int	i;
+	int	j;
 
-	var.i = 0;
-	var.j = 0;
-	while (data->map[0][var.i])
+	i = -1;
+	startrow = -1;
+	startcol = -1;
+	while (++i < data->height)
 	{
-		if (data->map[0][var.i++] != '1')
-			return (-1);
+		j = 0;
+		while (j < ft_strlen(data->map[i]))
+		{
+			if (data->map[i][j] == '0')
+			{
+				startrow = i;
+				startcol = j;
+				break ;
+			}
+			j++;
+		}
+		if (startrow != -1 && startcol != -1)
+			break ;
 	}
-	var.i = 0;
-	while (data->map[data->height - 1][var.i])
-	{
-		if (data->map[data->height - 1][var.i++] != '1')
-			return (-1);
-	}
-	while (var.j < data->height)
-	{
-		if (data->map[var.j][0] != '1'
-			|| data->map[var.j][ft_strlen(data->map[var.j]) - 1] != '1')
-			return (-1);
-		var.j++;
-	}
-	return (0);
+	if (backtrack(data, startrow, startcol))
+		return (-1);
 }
 
 int	check_map(t_data *data)
