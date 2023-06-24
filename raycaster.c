@@ -25,8 +25,8 @@ void	find_player_location(t_data *data)
 		{
 			if (ft_strchr("WESN", data->map[var.j][var.i]))
 			{
-				data->px = var.i * GRID - 32;
-				data->py = var.j * GRID - 32;
+				data->px = (var.i + 1) * GRID - 32;
+				data->py = (var.j + 1) * GRID - 32;
 				check_player_angle(*(ft_strchr("WESN",
 							data->map[var.j][var.i])), data);
 				return ;
