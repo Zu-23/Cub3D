@@ -6,17 +6,6 @@ int	ft_error(char *str)
 	exit(1);
 }
 
-// int	skip_spaces(char **line)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (line && *line && (**line == ' ' || **line == '\t' || **line == '\r'
-// 			|| **line == '\v' || **line == '\f' || **line == '\n') && i++)
-// 		(*line)++;
-// 	return (i);
-// }
-
 int	fill_texture(char *line, t_texture *texture, int *success)
 {
 	char	*after_xpm;
@@ -33,7 +22,7 @@ int	fill_texture(char *line, t_texture *texture, int *success)
 	ft_strcpy(texture->id, ft_strtok(line, " "));
 	ft_strcpy(texture->dest, ft_strtok(NULL, " \n\r\f\t\v"));
 	printf("id: %s\ndest: %s\n", texture->id, texture->dest);
-	if (!texture->dest || ft_strstr(texture->dest, ".xpm") == NULL)
+	if (ft_strstr(texture->dest, ".xpm") == NULL)
 		return (printf("bruh"), -1);
 	*success = 1;
 	return (0);
@@ -44,7 +33,6 @@ int	check_rgb(char *rgb)
 	int	i;
 
 	i = 0;
-	//printf("RGB: %s\n", rgb);
 	if (rgb == NULL)
 		return (-1);
 	while (rgb[i])
@@ -172,7 +160,6 @@ int	parse_map(char *line, t_data *data, char *content)
 	}
 	str[var.j] = '\0';
 	ft_strcpy(data->map[data->height++], str);
-	// printf("map: %s\n", data->map[data->height-1]);
 	free(str);
 	return (0);
 }
@@ -256,33 +243,6 @@ int	check_player_position(t_data *data)
 	return (0);
 }
 
-// int	check_closed_walls(t_data *data)
-// {
-// 	t_var	var;
-
-// 	var.i = 0;
-// 	var.j = 0;
-// 	while (data->map[0][var.i])
-// 	{
-// 		if (data->map[0][var.i++] != '1')
-// 			return (-1);
-// 	}
-// 	var.i = 0;
-// 	while (data->map[data->height - 1][var.i])
-// 	{
-// 		if (data->map[data->height - 1][var.i++] != '1')
-// 			return (-1);
-// 	}
-// 	while (var.j < data->height)
-// 	{
-// 		if (data->map[var.j][0] != '1'
-// 			|| data->map[var.j][ft_strlen(data->map[var.j]) - 1] != '1')
-// 			return (-1);
-// 		var.j++;
-// 	}
-// 	return (0);
-// }
-
 int	backtrack(t_data *data, int row, int col)
 {
 	int	newrow;
@@ -292,11 +252,7 @@ int	backtrack(t_data *data, int row, int col)
 
 	data->visited[row][col] = 1;
 	i = -1;
-	offset = malloc(sizeof(int) * 4);
-	offset[0] = 1;
-	offset[1] = -1;
-	offset[2] = 0;
-	offset[3] = 0;
+	offset = (int [4]){0, 0, 1, -1};
 	while (++i < 4)
 	{
 		newcol = col + offset[i];
@@ -305,13 +261,13 @@ int	backtrack(t_data *data, int row, int col)
 		{
 			if (data->map[newrow][newcol] == '0'
 				&& data->visited[newrow][newcol] == 0)
-				if (backtrack(data, newrow, newcol))
-					return (free(offset), 1);
+				if (newrow == 0 || backtrack(data, newrow, newcol))
+					return (1);
 		}
 		else
-			return (free(offset), 1);
+			return (1);
 	}
-	return (free(offset), 0);
+	return (0);
 }
 
 int	check_closed_walls(t_data *data)
@@ -324,21 +280,19 @@ int	check_closed_walls(t_data *data)
 	i = -1;
 	startrow = -1;
 	startcol = -1;
-	while (++i < data->height)
+	while (++i < data->height && startrow == -1 && startcol == -1)
 	{
-		j = 0;
-		while (j < ft_strlen(data->map[i]))
+		j = -1;
+		while (++j < ft_strlen(data->map[i]))
 		{
-			if (data->map[i][j] == '0')
+			if (data->map[i][j] == 'N' || data->map[i][j] == 'S'
+				|| data->map[i][j] == 'E' || data->map[i][j] == 'W')
 			{
 				startrow = i;
 				startcol = j;
 				break ;
 			}
-			j++;
 		}
-		if (startrow != -1 && startcol != -1)
-			break ;
 	}
 	if (backtrack(data, startrow, startcol))
 		return (-1);

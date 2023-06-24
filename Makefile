@@ -7,7 +7,7 @@ FLAGS :=	-Wall -Wextra -Werror
 LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
 LIBFT :=	lib_gnl/lib/libft.a
 GNL	:=		lib_gnl/gnl/get_next_line.o
-SRC :=		parser.c main.c
+SRC :=		parser.c main.c rendering.c raycaster.c
 OBJ	:=		$(SRC:.c=.o)
 
 all: $(NAME)
