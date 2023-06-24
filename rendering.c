@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/06/24 02:47:07 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/06/24 04:16:20 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,13 @@ void	draw_map(t_data *data)
 		while (y < PLANE_WIDTH)
 		{
 			if (data->map[x][y] == '1')
-				draw_square(data, y * 32, x * 32, 0x00FF0000);
+				draw_square(data, (y + 1) * GRID - 32, (x + 1) * GRID - 32,
+					0x00FF0000);
 			else if (data->map[x][y] == '0' || data->map[x][y] == 'N'
 					|| data->map[x][y] == 'S' || data->map[x][y] == 'E'
 					|| data->map[x][y] == 'W')
-				draw_square(data, y * 32, x * 32, 0x00000000);
+				draw_square(data, (y + 1) * GRID - 32, (x + 1) * GRID - 32,
+					0x00000000);
 			y++;
 		}
 		x++;
@@ -90,11 +92,21 @@ int	key_hook(int keycode, t_data *data)
 	{
 		data->px += 10 * cos(data->player_angle * M_PI / 180);
 		data->py += 10 * sin(data->player_angle * M_PI / 180);
+		// if (data->map[data->px][data->py] == '1')
+		// {
+		// 	data->px -= 10 * cos(data->player_angle * M_PI / 180);
+		// 	data->py -= 10 * sin(data->player_angle * M_PI / 180);
+		// }
 	}
 	if (keycode == W)
 	{
 		data->px -= 10 * cos(data->player_angle * M_PI / 180);
 		data->py -= 10 * sin(data->player_angle * M_PI / 180);
+		// if (data->map[data->px][data->py] == '1')
+		// {
+		// 	data->px += 10 * cos(data->player_angle * M_PI / 180);
+		// 	data->py += 10 * sin(data->player_angle * M_PI / 180);
+		// }
 	}
 	if (keycode == A)
 	{
@@ -122,8 +134,7 @@ int	key_hook(int keycode, t_data *data)
 void	render(t_data *data)
 {
 	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, PLANE_HEIGHT, PLANE_WIDTH,
-			"Cub3D");
+	data->win = mlx_new_window(data->mlx, PLANE_HEIGHT, PLANE_WIDTH, "Cub3D");
 	data->img = mlx_new_image(data->mlx, PLANE_HEIGHT, PLANE_WIDTH);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
