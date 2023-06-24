@@ -11,14 +11,11 @@
 # include <stdlib.h>
 # include <string.h>
 
-/*
-DATA:
-	1- DIRECTION TEXTURES: IT HAS 2 ARGUMENTS *ID AND *DESTINATION
-	2- FLOOR COLOR: IT HAS 4 ARGUMENTS *ID *RED *GREEN *BLUE
-	3- CEILING COLOR: IT HAS 4 ARGUMENTS *ID *RED *GREEN *BLUE
-	4- MAP
-*/
-
+# define D 2
+# define S 1
+# define A 0
+# define W 13
+# define ESC 53
 # define GRID 64
 # define PLAYER_HEIGHT 32
 # define PLANE_HEIGHT 1024
@@ -36,9 +33,9 @@ typedef struct s_raycast
 	int			hy;
 	int			vx;
 	int			vy;
-	int			sin_ang;
-	int			cos_ang;
-	int			tan_ang;
+	double		sin_ang;
+	double		cos_ang;
+	double		tan_ang;
 	double		next_h;
 	double		next_v;
 	int			dist_h;
@@ -88,11 +85,21 @@ typedef struct s_data
 	int			plane_center_x;
 	int			plane_center_y;
 	int			ray_angle;
+	void		*mlx;
+	void		*win;
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
 }				t_data;
 
 int		parse_file(int fd, t_data *data);
 void	find_player_location(t_data *data);
 void	check_data(t_data *data);
 int		ft_error(char *str);
+void	render(t_data *data);
+void	raycasting(t_data *data);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 #endif
