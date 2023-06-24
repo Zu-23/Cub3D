@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/06/24 04:16:20 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/06/24 04:37:54 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	key_hook(int keycode, t_data *data)
 	{
 		data->px += 10 * cos(data->player_angle * M_PI / 180);
 		data->py += 10 * sin(data->player_angle * M_PI / 180);
-		// if (data->map[data->px][data->py] == '1')
+		// if (data->map[(data->px + 32) / GRID - 1][(data->py + 32) / GRID - 1] == '1')
 		// {
 		// 	data->px -= 10 * cos(data->player_angle * M_PI / 180);
 		// 	data->py -= 10 * sin(data->player_angle * M_PI / 180);
@@ -102,7 +102,7 @@ int	key_hook(int keycode, t_data *data)
 	{
 		data->px -= 10 * cos(data->player_angle * M_PI / 180);
 		data->py -= 10 * sin(data->player_angle * M_PI / 180);
-		// if (data->map[data->px][data->py] == '1')
+		// if (data->map[(data->px + 32) / GRID - 1][(data->py + 32) / GRID - 1] == '1')
 		// {
 		// 	data->px += 10 * cos(data->player_angle * M_PI / 180);
 		// 	data->py += 10 * sin(data->player_angle * M_PI / 180);
