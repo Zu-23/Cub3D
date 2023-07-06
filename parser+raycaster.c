@@ -20,11 +20,11 @@ DATA:
 #define PLAYER_HEIGHT	32
 #define PLANE_HEIGHT	1024
 #define PLANE_WIDTH		1024
-#define PLAYER_DISTANCE	(1024 / 2) / tan(30)
+#define PLAYER_DISTANCE	886.81	//(1024 / 2) / tan(30)
 #define	FOV				60
 #define PLANE_CENTERX	1024 / 2
 #define	PLANE_CENTERY	1024 / 2
-#define	RAY_ANGLE		60/1024
+#define	RAY_ANGLE		0.058	//60 / 1024
 
 
 typedef struct s_wall
@@ -123,7 +123,7 @@ int	fill_texture(char *line, t_texture *texture, int *success)
 	ft_strcpy(texture->id, ft_strtok(line, " "));
 	ft_strcpy(texture->dest, ft_strtok(NULL, " \n"));
 	printf("id: %s\ndest: %s\n", texture->id, texture->dest);
-	if (texture->dest == NULL || ft_strstr(texture->dest, ".xpm") == NULL)
+	if (ft_strstr(texture->dest, ".xpm") == NULL) //need to look at this later.
 		return (-1);
 	*success = 1;
 	return (0);
@@ -239,7 +239,7 @@ int check_valid_line(char *line, t_data *data)
     return (0);
 }
 
-int	parse_map(char *line, t_data *data, char *content)
+int	parse_map(char *line, t_data *data)
 {
 	char	*str;
 	t_var   var;
@@ -252,7 +252,6 @@ int	parse_map(char *line, t_data *data, char *content)
     str = malloc(ft_strlen(line) + 1);
     if (!str)
         return (-1);
-	int len = ft_strlen(line);
 	while (line[var.i] && line[var.i] != '\n')
 	{
 		while (line[var.i] == ' ')
@@ -283,7 +282,7 @@ int	evaluate_parse_functions(char *line, t_data *data)
 		return (-1);
 	if (success == 1)
 		return (0);
-	if(parse_map(line, data, "01NSWE"))
+	if(parse_map(line, data))
 		return (-1);
 	return (0);
 }
@@ -451,17 +450,11 @@ void	find_player_location(t_data *data)
 	}
 }
 
-int	data_init(t_data *data)//might not be needed since we defined macros 
-{
-	ft_memset(data, 0, sizeof(t_data));
-	data->plane_height = 1024;
-	data->plane_width = 1024;
-}
 
 
-int	find_intersection(int iter_ray, int column, t_data *data, t_rcst *ray)
+int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
-	ray->radian = iter_ray * (3.14 / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
+	ray->radian = iter_ray * (M_PI / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
@@ -481,41 +474,71 @@ int	find_intersection(int iter_ray, int column, t_data *data, t_rcst *ray)
 	(data->py - ray->hy) * (data->py - ray->hy));
 	ray->dist_v = sqrt((data->px - ray->vx) * (data->px - ray->vx) +
 	(data->py - ray->vy) * (data->py - ray->vy));
+
+	return (0);
 }
 
-int	check_wall_collision(int iter_ray, int column, t_data *data, t_rcst *ray)
+int	check_wall_collision(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
 	t_wall wall;
 
+	(void) iter_ray;
+	(void)column;
 	wall.hit = 0;
-	wall.side_hit = 0;
-	wall.imgcol = 0;
 	while (wall.hit == 0)
 	{
-		if (ray->dist_h >= ray->dist_v)
+		if (ray->dist_h <= ray->dist_v)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
+			{
+				wall.hit = 1;
+				printf("found a wall in (%d, %d)!!\n", (int)ray->hx / GRID, (int)ray->hy / GRID);
+				printf("dist_h: %f\n", ray->dist_h);
+			}
+			else
+			{
+				ray->dist_h += ray->next_h;
+				ray->hx += ray->next_h * ray->cos_ang;
+				ray->hy += ray->next_h * -ray->sin_ang;
+			}
+		}
+		else
+		{
+			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
+			{
+				wall.hit = 1;
+				printf("found a wall in (%d, %d)!!\n", (int)ray->vx / GRID, (int)ray->vy / GRID);
+				printf("dist_v: %f | next_v: %f\n", ray->dist_v, ray->next_v);
+			}
+			else
+			{
+				ray->dist_v += ray->next_v;
+				ray->vx += ray->next_v * ray->cos_ang;
+				ray->vx += ray->next_v * -ray->sin_ang;
+			}
 		}
 	}
+	return (0);
 	// check_wall_horizontal
 	// chec_wall_vertical
 }
 
 int	raycasting(t_data *data)
 {
-	int	iter_ray;
-	int	col;
-	t_rcst ray;
+	double	iter_ray;
+	int		col;
+	t_rcst 	ray;
 
 	iter_ray = data->player_angle - (FOV / 2);
 	col = 0;
-	find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
 	while (col < PLANE_WIDTH)
 	{
+		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
 		check_wall_collision(iter_ray, col, data, &ray);
 		col++;
 		iter_ray += RAY_ANGLE;
 	}
+	return (0);
 }
 
 
@@ -534,7 +557,7 @@ int main(int ac, char **av)
 		check_data(&data);
 		//////END OF PARSING TEST/////
 		find_player_location(&data);
-		printf("player x %d y %d angle %d\n", data.px, data.py, data.player_angle);
+		raycasting(&data);
 	}
 	else
 		ft_error("Error\nwrong number of arguments\n");

@@ -1,23 +1,22 @@
 NAME :=		cube3D
 
 CC :=		gcc
-FLAGS :=	-Wall -Wextra -Werror
+FLAGS :=	-Wall -Wextra -Werror -lm
 DIR :=		minilibx-linux
-LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
-LIBFT :=	42-functions/LIBFT_42/libft.a
-GNL	:=		42-functions/Get_next_line_42/get_next_line.o
-SRC :=		main.c
+LIBFT :=	./lib_gnl/lib/libft.a
+GNL	:=		./lib_gnl/gnl/get_next_line.o
+SRC :=		$(wildcard *.c)
 OBJ	:=		$(SRC:.c=.o)
-
+# gcc test.c libmlx42.a -I./glfw -L./glfw/lib -lglfw -framework Cocoa -framework OpenGL -framework IOKit
 all: $(NAME)
 #dont forget making rule for the OBJ
 $(NAME): $(LIBFT) $(GNL)
-	@$(CC) $(FLAGS) main.c $(LIBS) $(LIBFT) $(GNL) -o $(NAME)
+	@$(CC) $(FLAGS) $(SRC) $(LIBFT) $(GNL) -o $(NAME)
 	@echo "build complete!"
 $(LIBFT) :
-	@$(MAKE) -C 42-functions/LIBFT_42 --quiet
+	@$(MAKE) -C lib_gnl/lib --quiet
 $(GNL) :
-	@$(MAKE) -C 42-functions/Get_next_line_42 --quiet
+	@$(MAKE) -C lib_gnl/gnl --quiet
 clean:
 	@rm -f 
 
