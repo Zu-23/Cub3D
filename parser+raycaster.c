@@ -22,10 +22,9 @@ DATA:
 #define PLANE_WIDTH		1024
 #define PLAYER_DISTANCE	886.81	//(1024 / 2) / tan(30)
 #define	FOV				60
-#define PLANE_CENTERX	1024 / 2
-#define	PLANE_CENTERY	1024 / 2
+#define PLANE_CENTER	1024 / 2
 #define	RAY_ANGLE		0.058	//60 / 1024
-
+#define	GRID_DIV_PROJ	64 * 1024 //GRID * PLAYER_DISTANCE
 
 typedef struct s_wall
 {
@@ -454,7 +453,7 @@ void	find_player_location(t_data *data)
 
 int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
-	ray->radian = iter_ray * (M_PI / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
+	ray->radian = iter_ray * (3.14 / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
@@ -478,22 +477,19 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	return (0);
 }
 
-int	check_wall_collision(double iter_ray, int column, t_data *data, t_rcst *ray)
+int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 {
-	t_wall wall;
-
-	(void) iter_ray;
-	(void)column;
-	wall.hit = 0;
-	while (wall.hit == 0)
+	wall->hit = 0;
+	while (wall->hit == 0)
 	{
 		if (ray->dist_h <= ray->dist_v)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
-				wall.hit = 1;
-				printf("found a wall in (%d, %d)!!\n", (int)ray->hx / GRID, (int)ray->hy / GRID);
-				printf("dist_h: %f\n", ray->dist_h);
+				wall->hit = 1;
+				wall->wall_dist = ray->dist_h;
+				wall->wall_x = ray->hx;
+				wall->wall_y = ray->hy;
 			}
 			else
 			{
@@ -506,9 +502,10 @@ int	check_wall_collision(double iter_ray, int column, t_data *data, t_rcst *ray)
 		{
 			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
 			{
-				wall.hit = 1;
-				printf("found a wall in (%d, %d)!!\n", (int)ray->vx / GRID, (int)ray->vy / GRID);
-				printf("dist_v: %f | next_v: %f\n", ray->dist_v, ray->next_v);
+				wall->hit = 1;
+				wall->wall_dist = ray->dist_v;
+				wall->wall_x = ray->vx;
+				wall->wall_y = ray->vx;
 			}
 			else
 			{
@@ -523,6 +520,22 @@ int	check_wall_collision(double iter_ray, int column, t_data *data, t_rcst *ray)
 	// chec_wall_vertical
 }
 
+void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
+{
+	double	wall_height;
+	double	top_wall;
+	double	i;
+
+	i = 0;
+	wall_height = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	top_wall = PLANE_CENTER - (wall_height / 2);
+	while (i < wall_height)
+	{
+		MLX_PUT_PIXEL(col, top_wall + i)
+		i++;
+	}
+}
+
 int	raycasting(t_data *data)
 {
 	double	iter_ray;
@@ -534,7 +547,8 @@ int	raycasting(t_data *data)
 	while (col < PLANE_WIDTH)
 	{
 		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
-		check_wall_collision(iter_ray, col, data, &ray);
+		check_wall_collision(data, &ray);
+		draw_wall();
 		col++;
 		iter_ray += RAY_ANGLE;
 	}
