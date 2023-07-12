@@ -52,6 +52,11 @@ typedef struct s_texture
 	char		dest[200];
 }				t_texture;
 
+typedef struct s_wall
+{
+	
+}
+
 typedef struct s_var
 {
 	int			i;
