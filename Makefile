@@ -4,7 +4,7 @@ CC :=		gcc
 FLAGS :=	-Wall -Wextra -Werror
 DIR :=		minilibx-linux
 LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
-#LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
+LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
 LIBFT :=	lib_gnl/lib/libft.a
 GNL	:=		lib_gnl/gnl/get_next_line.o
 SRC :=		parser.c main.c rendering.c raycaster.c
@@ -13,7 +13,7 @@ OBJ	:=		$(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(GNL) $(OBJ)
-	$(CC) $(FLAGS) $(OBJ)  $(LIBFT) $(GNL) $(LIBS) -o $(NAME)
+	$(CC) $(FLAGS) $(OBJ)  $(LIBFT) $(GNL) $(LIBS2) -o $(NAME)
 	@echo "build complete!"
 
 %.o: %.c cub3d.h
