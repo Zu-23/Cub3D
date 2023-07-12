@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/12 14:36:53 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/12 14:39:23 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "minilibx-linux/mlx.h"
+#include <mlx.h>
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
