@@ -6,14 +6,16 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/06/25 00:03:36 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/12 14:36:53 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cub3d.h"
 #include <math.h>
-#include <mlx.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "minilibx-linux/mlx.h"
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -145,13 +147,33 @@ int	key_hook(int keycode, t_data *data)
 		if (data->player_angle > 360)
 			data->player_angle -= 360;
 	}
+	if (keycode == A)
+	{
+		data->px += 10 * cos((data->player_angle + 90) * M_PI / 180);
+		data->py += 10 * sin((data->player_angle + 90) * M_PI / 180);
+		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
+		{
+			data->px -= 10 * cos((data->player_angle + 90) * M_PI / 180);
+			data->py -= 10 * sin((data->player_angle + 90) * M_PI / 180);
+		}
+	}
+	if (keycode == D)
+	{
+		data->px += 10 * cos((data->player_angle - 90) * M_PI / 180);
+		data->py += 10 * sin((data->player_angle - 90) * M_PI / 180);
+		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
+		{
+			data->px -= 10 * cos((data->player_angle - 90) * M_PI / 180);
+			data->py -= 10 * sin((data->player_angle - 90) * M_PI / 180);
+		}
+	}
 	mlx_destroy_image(data->mlx, data->img);
 	data->img = mlx_new_image(data->mlx, PLANE_HEIGHT, PLANE_WIDTH);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
 	draw_map(data);
 	draw_player(data);
-	raycasting(data);
+	//raycasting(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	return (0);
 }
@@ -165,7 +187,7 @@ void	render(t_data *data)
 			&data->line_length, &data->endian);
 	draw_map(data);
 	draw_player(data);
-	raycasting(data);
+	//raycasting(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	mlx_key_hook(data->win, key_hook, data);
 	mlx_loop(data->mlx);
