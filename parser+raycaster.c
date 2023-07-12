@@ -35,6 +35,7 @@ typedef struct s_wall
 	int	wall_y;
 	int	wall_dist;
 }t_wall;
+
 typedef struct s_raycast
 {
 	float		radian;
