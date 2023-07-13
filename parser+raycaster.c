@@ -2,6 +2,7 @@
 #include "lib_gnl/lib/libft.h"
 #include <fcntl.h>
 #include <math.h>
+#include "mlx_repo/MLX42/MLX42.h"
 
 //delete later
 #include <stdio.h>
@@ -93,6 +94,8 @@ typedef struct s_data
 	int			plane_center_x;
 	int			plane_center_y;
 	int			ray_angle;
+	mlx_t		*mlx;
+	mlx_image_t	*img;
 }t_data;
 
 int	ft_error(char *str)
@@ -527,11 +530,15 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	i;
 
 	i = 0;
-	wall_height = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	(void) ray;
+	(void) col;
+	(void) data;
+	//double wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	wall_height = ceil(GRID / wall->wall_dist * PLAYER_DISTANCE);
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	while (i < wall_height)
 	{
-		MLX_PUT_PIXEL(col, top_wall + i)
+		mlx_put_pixel(data->img, col , top_wall + i, 0xFF0000FF);
 		i++;
 	}
 }
@@ -541,28 +548,38 @@ int	raycasting(t_data *data)
 	double	iter_ray;
 	int		col;
 	t_rcst 	ray;
+	t_wall	wall;
 
 	iter_ray = data->player_angle - (FOV / 2);
 	col = 0;
 	while (col < PLANE_WIDTH)
 	{
 		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
-		check_wall_collision(data, &ray);
-		draw_wall();
+		check_wall_collision(data, &ray, &wall);
+		draw_wall(col, &ray, data, &wall);
 		col++;
 		iter_ray += RAY_ANGLE;
 	}
 	return (0);
 }
 
-
+void	mlxinit(t_data *data)
+{
+	data->mlx = mlx_init(PLANE_WIDTH, PLANE_HEIGHT, "Cub3D", false);
+	if (!data->mlx)
+		ft_error("mlx failed\n");
+	data->img = mlx_new_image(data->mlx, PLANE_WIDTH, PLANE_HEIGHT);
+	if (!data->img)
+		ft_error("img failed\n");
+}
 
 int main(int ac, char **av)
 {
-	t_data	data;
-	int		fd;
+	t_data		data;
+	int			fd;
 
 	ft_memset(&data, 0, sizeof(t_data));
+	mlxinit(&data);
 	if (ac == 2)
 	{
 		////PARSING TEST//////////
@@ -572,6 +589,9 @@ int main(int ac, char **av)
 		//////END OF PARSING TEST/////
 		find_player_location(&data);
 		raycasting(&data);
+		//mlx_loop_hook(data.mlx, ft_hook, data.mlx);
+		mlx_loop(data.mlx);
+		mlx_terminate(data.mlx);
 	}
 	else
 		ft_error("Error\nwrong number of arguments\n");
