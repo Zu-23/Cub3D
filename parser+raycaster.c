@@ -528,11 +528,21 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	i;
 
 	i = 0;
-	wall_height = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	(void) ray;
+	(void) col;
+	(void) data;
+	//double wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	wall_height = ceil(GRID / wall->wall_dist * PLAYER_DISTANCE);
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	while (i < wall_height)
 	{
-		MLX_PUT_PIXEL(col, top_wall + i);
+		uint32_t color = ft_pixel(
+				rand() % 0xFF, // R
+				rand() % 0xFF, // G
+				rand() % 0xFF, // B
+				rand() % 0xFF  // A
+			);
+		my_mlx_put_pixel(data->img, col , top_wall + i, color);
 		i++;
 	}
 }
@@ -542,14 +552,15 @@ int	raycasting(t_data *data)
 	double	iter_ray;
 	int		col;
 	t_rcst 	ray;
+	t_wall	wall;
 
 	iter_ray = data->player_angle - (FOV / 2);
 	col = 0;
 	while (col < PLANE_WIDTH)
 	{
 		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
-		check_wall_collision(data, &ray);
-		draw_wall();
+		check_wall_collision(data, &ray, &wall);
+		draw_wall(col, &ray, data, &wall);
 		col++;
 		iter_ray += RAY_ANGLE;
 	}

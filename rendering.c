@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/12 15:48:54 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/13 11:54:18 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,9 +171,9 @@ int	key_hook(int keycode, t_data *data)
 	data->img = mlx_new_image(data->mlx, PLANE_HEIGHT, PLANE_WIDTH);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
-	draw_map(data);
-	draw_player(data);
-	//raycasting(data);
+	// draw_map(data);
+	// draw_player(data);
+	raycasting(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	return (0);
 }
@@ -185,9 +185,9 @@ void	render(t_data *data)
 	data->img = mlx_new_image(data->mlx, PLANE_HEIGHT, PLANE_WIDTH);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
-	draw_map(data);
-	draw_player(data);
-	//raycasting(data);
+	// draw_map(data);
+	// draw_player(data);
+	raycasting(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	mlx_key_hook(data->win, key_hook, data);
 	mlx_loop(data->mlx);
