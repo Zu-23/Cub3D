@@ -523,6 +523,11 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 	// chec_wall_vertical
 }
 
+int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
+{
+    return (r << 24 | g << 16 | b << 8 | a);
+}
+
 void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 {
 	double	wall_height;
@@ -538,7 +543,13 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	while (i < wall_height)
 	{
-		mlx_put_pixel(data->img, col , top_wall + i, 0xFF0000FF);
+		uint32_t color = ft_pixel(
+				rand() % 0xFF, // R
+				rand() % 0xFF, // G
+				rand() % 0xFF, // B
+				rand() % 0xFF  // A
+			);
+		mlx_put_pixel(data->img, col , top_wall + i, color);
 		i++;
 	}
 }
@@ -573,6 +584,23 @@ void	mlxinit(t_data *data)
 		ft_error("img failed\n");
 }
 
+// void	buttons_hook(void *param)
+// {
+// 	mlx_t	*mlx;
+
+// 	mlx = param;
+// 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
+// 		mlx_close_window(mlx);
+// 	if (mlx_is_key_down(mlx, MLX_KEY_UP))
+// 		//action
+// 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+// 		//action
+// 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+// 		//action
+// 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+// 		//actin
+// }
+
 int main(int ac, char **av)
 {
 	t_data		data;
@@ -589,7 +617,7 @@ int main(int ac, char **av)
 		//////END OF PARSING TEST/////
 		find_player_location(&data);
 		raycasting(&data);
-		//mlx_loop_hook(data.mlx, ft_hook, data.mlx);
+		//mlx_loop_hook(data.mlx, buttons_hook, data.mlx);
 		mlx_loop(data.mlx);
 		mlx_terminate(data.mlx);
 	}
