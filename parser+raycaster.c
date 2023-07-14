@@ -456,17 +456,17 @@ void	find_player_location(t_data *data)
 
 int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
-	ray->radian = iter_ray * (3.14 / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
+	ray->radian = iter_ray * (M_PI / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
 	if (-ray->sin_ang < 0)
-		ray->hy = floor(data->py / GRID) * GRID - 1;
+		ray->hy = floor(data->py / GRID) * GRID - 0.001;
 	else
 		ray->hy = floor(data->py / GRID) * GRID + GRID;
 	ray->hx = data->px + (data->py - ray->hy) / ray->tan_ang;
 	if (ray->cos_ang < 0)
-		ray->vx = floor(data->px / GRID) * GRID - 1;
+		ray->vx = floor(data->px / GRID) * GRID - 0.001;
 	else
 		ray->vx = floor(data->px / GRID) * GRID + GRID;
 	ray->vy = data->py + (data->px - ray->vx) * ray->tan_ang;
@@ -493,8 +493,6 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 				// printf("col hx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_h;
-				wall->wall_x = ray->hx;
-				wall->wall_y = ray->hy;
 			}
 			else
 			{
@@ -510,8 +508,6 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 				// printf("col vx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_v;
-				wall->wall_x = ray->vx;
-				wall->wall_y = ray->vx;
 			}
 			else
 			{
@@ -538,16 +534,12 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) col;
 	(void) data;
 	// int wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
-	wall_height = ceil(GRID / wall->wall_dist * PLAYER_DISTANCE);
+	wall_height = ceil((double)GRID /  wall->wall_dist * PLAYER_DISTANCE);
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	//printf("col draw wall %d\n", col);
-	while (i <= wall_height)
+	printf("wall height %f top wall %f wall dist %d\n", wall_height, top_wall, wall->wall_dist);
+	while (i <= wall_height && top_wall > 0)
 	{
-		if (col == 0)
-		{
-			printf("wall dist %d grid %d player dist %f\n", wall->wall_dist, GRID, PLAYER_DISTANCE);
-			printf("wall height %f top wall %f\n", wall_height, top_wall);
-		}
 		mlx_put_pixel(data->img, col, top_wall + i, 0xFFFFFFFF);
 		i++;
 	}
