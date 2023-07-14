@@ -480,8 +480,9 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	return (0);
 }
 
-int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
+int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 {
+	(void) col;
 	wall->hit = 0;
 	while (wall->hit == 0)
 	{
@@ -489,6 +490,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
+				// printf("col hx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_h;
 				wall->wall_x = ray->hx;
@@ -505,6 +507,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 		{
 			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
 			{
+				// printf("col vx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_v;
 				wall->wall_x = ray->vx;
@@ -523,10 +526,6 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 	// chec_wall_vertical
 }
 
-int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
-{
-    return (r << 24 | g << 16 | b << 8 | a);
-}
 
 void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 {
@@ -538,18 +537,18 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) ray;
 	(void) col;
 	(void) data;
-	//double wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	// int wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
 	wall_height = ceil(GRID / wall->wall_dist * PLAYER_DISTANCE);
 	top_wall = PLANE_CENTER - (wall_height / 2);
-	while (i < wall_height)
+	//printf("col draw wall %d\n", col);
+	while (i <= wall_height)
 	{
-		uint32_t color = ft_pixel(
-				rand() % 0xFF, // R
-				rand() % 0xFF, // G
-				rand() % 0xFF, // B
-				rand() % 0xFF  // A
-			);
-		mlx_put_pixel(data->img, col , top_wall + i, color);
+		if (col == 0)
+		{
+			printf("wall dist %d grid %d player dist %f\n", wall->wall_dist, GRID, PLAYER_DISTANCE);
+			printf("wall height %f top wall %f\n", wall_height, top_wall);
+		}
+		mlx_put_pixel(data->img, col, top_wall + i, 0xFFFFFFFF);
 		i++;
 	}
 }
@@ -566,7 +565,7 @@ int	raycasting(t_data *data)
 	while (col < PLANE_WIDTH)
 	{
 		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
-		check_wall_collision(data, &ray, &wall);
+		check_wall_collision(data, &ray, &wall, col);
 		draw_wall(col, &ray, data, &wall);
 		col++;
 		iter_ray += RAY_ANGLE;
@@ -582,6 +581,7 @@ void	mlxinit(t_data *data)
 	data->img = mlx_new_image(data->mlx, PLANE_WIDTH, PLANE_HEIGHT);
 	if (!data->img)
 		ft_error("img failed\n");
+	mlx_image_to_window(data->mlx, data->img, 0, 0);
 }
 
 // void	buttons_hook(void *param)
