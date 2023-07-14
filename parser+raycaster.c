@@ -532,7 +532,7 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) col;
 	(void) data;
 	//double wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
-	wall_height = ceil(GRID / wall->wall_dist * PLAYER_DISTANCE);
+	wall_height = ceil(GRID * PLAYER_DISTANCE /  wall->wall_dist );
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	while (i < wall_height)
 	{
