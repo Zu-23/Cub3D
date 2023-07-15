@@ -17,15 +17,15 @@ DATA:
 	4- MAP
 */
 
-#define	GRID			64
+#define GRID			64
 #define PLAYER_HEIGHT	32
 #define PLANE_HEIGHT	1024
 #define PLANE_WIDTH		1024
-#define PLAYER_DISTANCE	886.81	//(1024 / 2) / tan(30)
-#define	FOV				60
-#define PLANE_CENTER	1024 / 2
-#define	RAY_ANGLE		0.058	//60 / 1024
-#define	GRID_DIV_PROJ	64 * 1024 //GRID * PLAYER_DISTANCE
+#define PLAYER_DISTANCE	886.81
+#define FOV				60
+#define PLANE_CENTER	512
+#define RAY_ANGLE		0.058
+#define GRID_DIV_PROJ	65536
 
 typedef struct s_wall
 {
@@ -533,14 +533,12 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) ray;
 	(void) col;
 	(void) data;
-	// int wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
-	wall_height = ceil((double)GRID /  wall->wall_dist * PLAYER_DISTANCE);
+	wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
 	top_wall = PLANE_CENTER - (wall_height / 2);
-	//printf("col draw wall %d\n", col);
 	printf("wall height %f top wall %f wall dist %d\n", wall_height, top_wall, wall->wall_dist);
 	while (i <= wall_height && top_wall > 0)
 	{
-		my_mlx_put_pixel(data->img, col, top_wall + i, 0xFFFFFFFF);
+		mlx_put_pixel(data->img, col, top_wall + i, 0xFFFFFFFF);
 		i++;
 	}
 }
@@ -549,7 +547,7 @@ int	raycasting(t_data *data)
 {
 	double	iter_ray;
 	int		col;
-	t_rcst 	ray;
+	t_rcst	ray;
 	t_wall	wall;
 
 	iter_ray = data->player_angle - (FOV / 2);
