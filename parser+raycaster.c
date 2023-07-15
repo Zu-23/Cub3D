@@ -29,13 +29,14 @@ DATA:
 
 typedef struct s_wall
 {
-	int	hit;
-	int	side_hit;
-	int	imgcol;
-	int	wall_x;
-	int	wall_y;
-	int	wall_dist;
+	int		hit;
+	int		side_hit;
+	int		imgcol;
+	int		wall_x;
+	int		wall_y;
+	double	wall_dist;
 }t_wall;
+
 typedef struct s_raycast
 {
 	float		radian;
