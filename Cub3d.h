@@ -20,7 +20,7 @@
 # define ESC 				53
 # define LEFT 				123
 # define RIGHT				124
-# define GRID				64
+# define GRID				32
 # define PLAYER_HEIGHT		32
 # define PLANE_HEIGHT		1024
 # define PLANE_WIDTH		1024
@@ -33,18 +33,18 @@
 typedef struct s_raycast
 {
 	float		radian;
-	int			hx;
-	int			hy;
-	int			vx;
-	int			vy;
+	double		hx;
+	double		hy;
+	double		vx;
+	double		vy;
 	double		sin_ang;
 	double		cos_ang;
 	double		tan_ang;
 	double		next_h;
 	double		next_v;
-	int			dist_h;
-	int			dist_v;
-}				t_rcst;
+	double		dist_h;
+	double		dist_v;
+}t_rcst;
 
 typedef struct s_texture
 {
@@ -54,12 +54,12 @@ typedef struct s_texture
 
 typedef struct s_wall
 {
-	int	hit;
-	int	side_hit;
-	int	imgcol;
-	int	wall_x;
-	int	wall_y;
-	int	wall_dist;
+	int		hit;
+	int		side_hit;
+	int		imgcol;
+	double	wall_x;
+	double	wall_y;
+	double	wall_dist;
 }				t_wall;
 
 typedef struct s_var

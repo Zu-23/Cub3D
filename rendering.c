@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/15 15:22:16 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/16 00:24:56 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ void	draw_square(t_data *data, int x, int y, int color)
 	int	j;
 
 	i = x * 1;
-	while (i < (x + 32) * 1)
+	while (i < (x + GRID) * 1)
 	{
 		j = y * 1;
-		while (j < (y + 32) * 1)
+		while (j < (y + GRID) * 1)
 		{
 			my_mlx_put_pixel(data, i, j, color);
 			j++;
@@ -93,8 +93,8 @@ void	update(t_data *data)
 	data->img = mlx_new_image(data->mlx, PLANE_HEIGHT, PLANE_WIDTH);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
-	// draw_map(data);
-	// draw_player(data);
+	draw_map(data);
+	draw_player(data);
 	raycasting(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 }
@@ -110,8 +110,8 @@ int	key_hook(int keycode, t_data *data)
 		exit(0);
 	if (keycode == S)
 	{
-		data->px += 10 * cos(data->player_angle * M_PI / 180);
-		data->py += 10 * sin(data->player_angle * M_PI / 180);
+		data->px -= 10 * cos(data->player_angle * M_PI / 180);
+		data->py -= 10 * sin(data->player_angle * M_PI / 180);
 		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
 		{
 			data->px = x;
@@ -120,8 +120,8 @@ int	key_hook(int keycode, t_data *data)
 	}
 	if (keycode == W)
 	{
-		data->px -= 10 * cos(data->player_angle * M_PI / 180);
-		data->py -= 10 * sin(data->player_angle * M_PI / 180);
+		data->px += 10 * cos(data->player_angle * M_PI / 180);
+		data->py += 10 * sin(data->player_angle * M_PI / 180);
 		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
 		{
 			data->px = x;
@@ -150,13 +150,13 @@ int	key_hook(int keycode, t_data *data)
 	}
 	if (keycode == LEFT)
 	{
-		data->player_angle -= 10;
+		data->player_angle += 10;
 		if (data->player_angle < 0)
 			data->player_angle += 360;
 	}
 	if (keycode == RIGHT)
 	{
-		data->player_angle += 10;
+		data->player_angle -= 10;
 		if (data->player_angle > 360)
 			data->player_angle -= 360;
 	}
@@ -191,8 +191,8 @@ void	render(t_data *data)
 	data->img = mlx_new_image(data->mlx, PLANE_HEIGHT, PLANE_WIDTH);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
-	// draw_map(data);
-	// draw_player(data);
+	draw_map(data);
+	draw_player(data);
 	raycasting(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	mlx_key_hook(data->win, key_hook, data);
