@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/16 00:24:56 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/16 00:54:41 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,27 @@ void	my_mlx_put_pixel(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
+void	draw_rays(t_data *data)
+{
+	int	i;
+	int	x;
+	int	y;
+
+	i = data->player_angle - (FOV / 2);
+	while (i < data->player_angle + (FOV / 2))
+	{
+		x = data->px;
+		y = data->py;
+		while (data->map[(int)(y / GRID)][(int)(x / GRID)] != '1')
+		{
+			x += 10 * cos(i * M_PI / 180);
+			y += 10 * sin(i * M_PI / 180);
+		}
+		my_mlx_put_pixel(data, x, y, 0xFFFF00);
+		i += 1;
+	}
+}
+
 void	draw_player(t_data *data)
 {
 	int	x;
@@ -41,6 +62,7 @@ void	draw_player(t_data *data)
 		}
 		x++;
 	}
+	draw_rays(data);
 }
 
 void	draw_square(t_data *data, int x, int y, int color)
@@ -111,7 +133,7 @@ int	key_hook(int keycode, t_data *data)
 	if (keycode == S)
 	{
 		data->px -= 10 * cos(data->player_angle * M_PI / 180);
-		data->py -= 10 * sin(data->player_angle * M_PI / 180);
+		data->py -= 10 * -sin(data->player_angle * M_PI / 180);
 		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
 		{
 			data->px = x;
@@ -121,7 +143,7 @@ int	key_hook(int keycode, t_data *data)
 	if (keycode == W)
 	{
 		data->px += 10 * cos(data->player_angle * M_PI / 180);
-		data->py += 10 * sin(data->player_angle * M_PI / 180);
+		data->py += 10 * -sin(data->player_angle * M_PI / 180);
 		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
 		{
 			data->px = x;
@@ -131,7 +153,7 @@ int	key_hook(int keycode, t_data *data)
 	if (keycode == A)
 	{
 		data->px -= 10 * cos((data->player_angle - 90) * M_PI / 180);
-		data->py -= 10 * sin((data->player_angle - 90) * M_PI / 180);
+		data->py -= 10 * -sin((data->player_angle - 90) * M_PI / 180);
 		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
 		{
 			data->px = x;
@@ -141,7 +163,7 @@ int	key_hook(int keycode, t_data *data)
 	if (keycode == D)
 	{
 		data->px += 10 * cos((data->player_angle - 90) * M_PI / 180);
-		data->py += 10 * sin((data->player_angle - 90) * M_PI / 180);
+		data->py += 10 * -sin((data->player_angle - 90) * M_PI / 180);
 		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
 		{
 			data->px = x;
@@ -159,26 +181,6 @@ int	key_hook(int keycode, t_data *data)
 		data->player_angle -= 10;
 		if (data->player_angle > 360)
 			data->player_angle -= 360;
-	}
-	if (keycode == A)
-	{
-		data->px += 10 * cos((data->player_angle + 90) * M_PI / 180);
-		data->py += 10 * sin((data->player_angle + 90) * M_PI / 180);
-		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
-		{
-			data->px -= 10 * cos((data->player_angle + 90) * M_PI / 180);
-			data->py -= 10 * sin((data->player_angle + 90) * M_PI / 180);
-		}
-	}
-	if (keycode == D)
-	{
-		data->px += 10 * cos((data->player_angle - 90) * M_PI / 180);
-		data->py += 10 * sin((data->player_angle - 90) * M_PI / 180);
-		if (data->map[(int)(data->py / GRID)][(int)(data->px / GRID)] == '1')
-		{
-			data->px -= 10 * cos((data->player_angle - 90) * M_PI / 180);
-			data->py -= 10 * sin((data->player_angle - 90) * M_PI / 180);
-		}
 	}
 	update(data);
 	return (0);
