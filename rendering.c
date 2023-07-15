@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/15 01:16:17 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/15 15:22:16 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,17 +73,30 @@ void	draw_map(t_data *data)
 		while (y < PLANE_WIDTH)
 		{
 			if (data->map[x][y] == '1')
-				draw_square(data, (y + 1) * GRID - 32, (x + 1) * GRID - 32,
+				draw_square(data, (y + 1) * GRID - GRID, (x + 1) * GRID - GRID,
 					0x00FF0000);
 			else if (data->map[x][y] == '0' || data->map[x][y] == 'N'
 					|| data->map[x][y] == 'S' || data->map[x][y] == 'E'
 					|| data->map[x][y] == 'W')
-				draw_square(data, (y + 1) * GRID - 32, (x + 1) * GRID - 32,
+				draw_square(data, (y + 1) * GRID - GRID, (x + 1) * GRID - GRID,
 					0x00000000);
 			y++;
 		}
 		x++;
 	}
+}
+
+void	update(t_data *data)
+{
+	mlx_clear_window(data->mlx, data->win);
+	mlx_destroy_image(data->mlx, data->img);
+	data->img = mlx_new_image(data->mlx, PLANE_HEIGHT, PLANE_WIDTH);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
+			&data->line_length, &data->endian);
+	// draw_map(data);
+	// draw_player(data);
+	raycasting(data);
+	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 }
 
 int	key_hook(int keycode, t_data *data)
@@ -167,14 +180,7 @@ int	key_hook(int keycode, t_data *data)
 			data->py -= 10 * sin((data->player_angle - 90) * M_PI / 180);
 		}
 	}
-	mlx_destroy_image(data->mlx, data->img);
-	data->img = mlx_new_image(data->mlx, PLANE_HEIGHT, PLANE_WIDTH);
-	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
-			&data->line_length, &data->endian);
-	// draw_map(data);
-	// draw_player(data);
-	raycasting(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+	update(data);
 	return (0);
 }
 

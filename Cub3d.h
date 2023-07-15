@@ -24,11 +24,11 @@
 # define PLAYER_HEIGHT		32
 # define PLANE_HEIGHT		1024
 # define PLANE_WIDTH		1024
-# define PLAYER_DISTANCE	886.81	//(1024 / 2) / tan(30)
+# define PLAYER_DISTANCE	886.81
 # define FOV				60
-# define PLANE_CENTER		1024 / 2
-# define RAY_ANGLE			0.058	//60 / 1024
-# define GRID_DIV_PROJ		GRID * 1024 //GRID * PLAYER_DISTANCE
+# define PLANE_CENTER		512
+# define RAY_ANGLE			0.058
+# define GRID_DIV_PROJ		GRID * 1024
 
 typedef struct s_raycast
 {

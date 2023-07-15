@@ -25,8 +25,8 @@ void	find_player_location(t_data *data)
 		{
 			if (ft_strchr("WESN", data->map[var.j][var.i]))
 			{
-				data->px = (var.i + 1) * GRID - 32;
-				data->py = (var.j + 1) * GRID - 32;
+				data->px = (var.i + 1) * GRID - GRID;
+				data->py = (var.j + 1) * GRID - GRID;
 				check_player_angle(*(ft_strchr("WESN",
 							data->map[var.j][var.i])), data);
 				return ;
@@ -56,7 +56,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 			{
 				// printf("col hx: %d\n", col);
 				wall->hit = 1;
-				wall->wall_dist = ray->dist_h;
+				wall->wall_dist = ray->dist_h * cos(ray->radian - data->player_angle * (3.14 / 180));
 			}
 			else
 			{
@@ -71,7 +71,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 			{
 				// printf("col vx: %d\n", col);
 				wall->hit = 1;
-				wall->wall_dist = ray->dist_v;
+				wall->wall_dist = ray->dist_v * cos(ray->radian - data->player_angle * (3.14 / 180));
 			}
 			else
 			{
@@ -86,7 +86,6 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 	// chec_wall_vertical
 }
 
-
 void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 {
 	double	wall_height;
@@ -98,13 +97,14 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) col;
 	(void) data;
 	// int wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
-	wall_height = ceil((double)GRID /  wall->wall_dist * PLAYER_DISTANCE);
+	wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
 	top_wall = PLANE_CENTER - (wall_height / 2);
-	//printf("col draw wall %d\n", col);
+	if (wall_height >= PLANE_HEIGHT)
+		wall_height = PLANE_HEIGHT - 1;
 	printf("wall height %f top wall %f wall dist %d\n", wall_height, top_wall, wall->wall_dist);
-	while (i <= wall_height && top_wall > 0)
+	while (i <= wall_height && top_wall + i < PLANE_WIDTH - 1 && top_wall + i > 0 && col < PLANE_HEIGHT - 1 && col > 0)
 	{
-		my_mlx_put_pixel(data->img, col, top_wall + i, 0xFFFFFFFF);
+		my_mlx_put_pixel(data, col, top_wall + i, 0xFFFFFFFF);
 		i++;
 	}
 }
