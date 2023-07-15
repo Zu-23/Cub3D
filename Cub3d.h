@@ -20,15 +20,15 @@
 # define ESC 				53
 # define LEFT 				123
 # define RIGHT				124
-# define GRID				32
+# define GRID				64
 # define PLAYER_HEIGHT		32
-# define PLANE_HEIGHT		2024
+# define PLANE_HEIGHT		1024
 # define PLANE_WIDTH		1024
-# define PLAYER_DISTANCE	886.81
-# define FOV 				60
+# define PLAYER_DISTANCE	886.81	//(1024 / 2) / tan(30)
+# define FOV				60
 # define PLANE_CENTER		1024 / 2
-# define RAY_ANGLE			0.058
-# define GRID_DIV_PROJ		64 * 1024
+# define RAY_ANGLE			0.058	//60 / 1024
+# define GRID_DIV_PROJ		GRID * 1024 //GRID * PLAYER_DISTANCE
 
 typedef struct s_raycast
 {
@@ -114,6 +114,6 @@ void	check_data(t_data *data);
 int		ft_error(char *str);
 void	render(t_data *data);
 int		raycasting(t_data *data);
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	my_mlx_put_pixel(t_data *data, int x, int y, int color);
 
 #endif

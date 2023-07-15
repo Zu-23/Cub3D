@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/13 18:22:13 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/15 01:16:17 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <string.h>
 #include <mlx.h>
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_put_pixel(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
@@ -36,7 +36,7 @@ void	draw_player(t_data *data)
 		y = data->py - 5;
 		while (y < data->py + 5)
 		{
-			my_mlx_pixel_put(data, x, y, 0x000000FF);
+			my_mlx_put_pixel(data, x, y, 0x000000FF);
 			y++;
 		}
 		x++;
@@ -54,7 +54,7 @@ void	draw_square(t_data *data, int x, int y, int color)
 		j = y * 1;
 		while (j < (y + 32) * 1)
 		{
-			my_mlx_pixel_put(data, i, j, color);
+			my_mlx_put_pixel(data, i, j, color);
 			j++;
 		}
 		i++;

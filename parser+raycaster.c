@@ -2,6 +2,7 @@
 #include "lib_gnl/lib/libft.h"
 #include <fcntl.h>
 #include <math.h>
+#include "mlx_repo/MLX42/MLX42.h"
 
 //delete later
 #include <stdio.h>
@@ -35,7 +36,6 @@ typedef struct s_wall
 	int	wall_y;
 	int	wall_dist;
 }t_wall;
-
 typedef struct s_raycast
 {
 	float		radian;
@@ -94,6 +94,8 @@ typedef struct s_data
 	int			plane_center_x;
 	int			plane_center_y;
 	int			ray_angle;
+	mlx_t		*mlx;
+	mlx_image_t	*img;
 }t_data;
 
 int	ft_error(char *str)
@@ -454,17 +456,17 @@ void	find_player_location(t_data *data)
 
 int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
-	ray->radian = iter_ray * (3.14 / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
+	ray->radian = iter_ray * (M_PI / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
 	if (-ray->sin_ang < 0)
-		ray->hy = floor(data->py / GRID) * GRID - 1;
+		ray->hy = floor(data->py / GRID) * GRID - 0.001;
 	else
 		ray->hy = floor(data->py / GRID) * GRID + GRID;
 	ray->hx = data->px + (data->py - ray->hy) / ray->tan_ang;
 	if (ray->cos_ang < 0)
-		ray->vx = floor(data->px / GRID) * GRID - 1;
+		ray->vx = floor(data->px / GRID) * GRID - 0.001;
 	else
 		ray->vx = floor(data->px / GRID) * GRID + GRID;
 	ray->vy = data->py + (data->px - ray->vx) * ray->tan_ang;
@@ -478,8 +480,9 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	return (0);
 }
 
-int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
+int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 {
+	(void) col;
 	wall->hit = 0;
 	while (wall->hit == 0)
 	{
@@ -487,10 +490,9 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
+				// printf("col hx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_h;
-				wall->wall_x = ray->hx;
-				wall->wall_y = ray->hy;
 			}
 			else
 			{
@@ -503,10 +505,9 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 		{
 			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
 			{
+				// printf("col vx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_v;
-				wall->wall_x = ray->vx;
-				wall->wall_y = ray->vx;
 			}
 			else
 			{
@@ -521,6 +522,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 	// chec_wall_vertical
 }
 
+
 void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 {
 	double	wall_height;
@@ -531,18 +533,14 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) ray;
 	(void) col;
 	(void) data;
-	//double wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
-	wall_height = ceil(GRID * PLAYER_DISTANCE /  wall->wall_dist );
+	// int wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	wall_height = ceil((double)GRID /  wall->wall_dist * PLAYER_DISTANCE);
 	top_wall = PLANE_CENTER - (wall_height / 2);
-	while (i < wall_height)
+	//printf("col draw wall %d\n", col);
+	printf("wall height %f top wall %f wall dist %d\n", wall_height, top_wall, wall->wall_dist);
+	while (i <= wall_height && top_wall > 0)
 	{
-		uint32_t color = ft_pixel(
-				rand() % 0xFF, // R
-				rand() % 0xFF, // G
-				rand() % 0xFF, // B
-				rand() % 0xFF  // A
-			);
-		my_mlx_put_pixel(data->img, col , top_wall + i, color);
+		my_mlx_put_pixel(data->img, col, top_wall + i, 0xFFFFFFFF);
 		i++;
 	}
 }
@@ -559,7 +557,7 @@ int	raycasting(t_data *data)
 	while (col < PLANE_WIDTH)
 	{
 		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
-		check_wall_collision(data, &ray, &wall);
+		check_wall_collision(data, &ray, &wall, col);
 		draw_wall(col, &ray, data, &wall);
 		col++;
 		iter_ray += RAY_ANGLE;
@@ -567,14 +565,41 @@ int	raycasting(t_data *data)
 	return (0);
 }
 
+void	mlxinit(t_data *data)
+{
+	data->mlx = mlx_init(PLANE_WIDTH, PLANE_HEIGHT, "Cub3D", false);
+	if (!data->mlx)
+		ft_error("mlx failed\n");
+	data->img = mlx_new_image(data->mlx, PLANE_WIDTH, PLANE_HEIGHT);
+	if (!data->img)
+		ft_error("img failed\n");
+	mlx_image_to_window(data->mlx, data->img, 0, 0);
+}
 
+// void	buttons_hook(void *param)
+// {
+// 	mlx_t	*mlx;
+
+// 	mlx = param;
+// 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
+// 		mlx_close_window(mlx);
+// 	if (mlx_is_key_down(mlx, MLX_KEY_UP))
+// 		//action
+// 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+// 		//action
+// 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+// 		//action
+// 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+// 		//actin
+// }
 
 int main(int ac, char **av)
 {
-	t_data	data;
-	int		fd;
+	t_data		data;
+	int			fd;
 
 	ft_memset(&data, 0, sizeof(t_data));
+	mlxinit(&data);
 	if (ac == 2)
 	{
 		////PARSING TEST//////////
@@ -584,6 +609,9 @@ int main(int ac, char **av)
 		//////END OF PARSING TEST/////
 		find_player_location(&data);
 		raycasting(&data);
+		//mlx_loop_hook(data.mlx, buttons_hook, data.mlx);
+		mlx_loop(data.mlx);
+		mlx_terminate(data.mlx);
 	}
 	else
 		ft_error("Error\nwrong number of arguments\n");

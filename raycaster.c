@@ -44,8 +44,9 @@ void	data_init(t_data *data) //might not be needed since we defined macros
 	data->plane_width = 1024;
 }
 
-int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
+int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 {
+	(void) col;
 	wall->hit = 0;
 	while (wall->hit == 0)
 	{
@@ -53,10 +54,9 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
+				// printf("col hx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_h;
-				wall->wall_x = ray->hx;
-				wall->wall_y = ray->hy;
 			}
 			else
 			{
@@ -69,10 +69,9 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 		{
 			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
 			{
+				// printf("col vx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_v;
-				wall->wall_x = ray->vx;
-				wall->wall_y = ray->vx;
 			}
 			else
 			{
@@ -87,6 +86,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall)
 	// chec_wall_vertical
 }
 
+
 void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 {
 	double	wall_height;
@@ -97,13 +97,14 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) ray;
 	(void) col;
 	(void) data;
-	//double wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
-	wall_height = ceil(GRID * PLAYER_DISTANCE /  wall->wall_dist );
+	// int wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	wall_height = ceil((double)GRID /  wall->wall_dist * PLAYER_DISTANCE);
 	top_wall = PLANE_CENTER - (wall_height / 2);
-	while (i < wall_height)
+	//printf("col draw wall %d\n", col);
+	printf("wall height %f top wall %f wall dist %d\n", wall_height, top_wall, wall->wall_dist);
+	while (i <= wall_height && top_wall > 0)
 	{
-		uint32_t color = 0xFFFFFF;
-		my_mlx_pixel_put(data->img, col , top_wall + i, color);
+		my_mlx_put_pixel(data->img, col, top_wall + i, 0xFFFFFFFF);
 		i++;
 	}
 }
@@ -144,8 +145,8 @@ int	raycasting(t_data *data)
 	col = 0;
 	while (col < PLANE_WIDTH)
 	{
-		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
-		check_wall_collision(data, &ray, &wall);
+		find_intersection(iter_ray, col, data, &ray);
+		check_wall_collision(data, &ray, &wall, col);
 		draw_wall(col, &ray, data, &wall);
 		col++;
 		iter_ray += RAY_ANGLE;
