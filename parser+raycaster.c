@@ -490,8 +490,8 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	}
 	ray->hv_Ya = 64 * tan(ray->radian);
 	ray->vy = data->py + (data->px - ray->vx) * ray->tan_ang;
-	// ray->next_h = fabs(GRID / ray->sin_ang); //check permadi for a different approach
-	// ray->next_v = fabs(GRID / ray->cos_ang);
+	ray->next_h = fabs(GRID / ray->sin_ang); //check permadi for a different approach
+	ray->next_v = fabs(GRID / ray->cos_ang);
 	ray->dist_h = sqrt((data->px - ray->hx) * (data->px - ray->hx) + (data->py - ray->hy) * (data->py - ray->hy));
 	ray->dist_v = sqrt((data->px - ray->vx) * (data->px - ray->vx) + (data->py - ray->vy) * (data->py - ray->vy));
 	return (0);
