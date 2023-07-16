@@ -50,6 +50,10 @@ typedef struct s_raycast
 	double		next_v;
 	double		dist_h;
 	double		dist_v;
+	int hz_Ya;
+	int hv_Ya;
+	int hz_Xa;
+	int	hv_Xa;
 }t_rcst;
 
 typedef struct s_texture
@@ -456,27 +460,40 @@ void	find_player_location(t_data *data)
 
 int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
+	
+
 	ray->radian = iter_ray * (M_PI / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
 	if (-ray->sin_ang < 0)
+	{
+		ray->hz_Ya = -64;
 		ray->hy = floor(data->py / GRID) * GRID - 0.001;
+	}
 	else
+	{
+		ray->hz_Ya = 64;
 		ray->hy = floor(data->py / GRID) * GRID + GRID;
+	}
+	ray->hz_Xa = 64 / tan(ray->radian);
 	ray->hx = data->px + (data->py - ray->hy) / ray->tan_ang;
 	if (ray->cos_ang < 0)
+	{
+		ray->hv_Xa = -64;
 		ray->vx = floor(data->px / GRID) * GRID - 0.001;
+	}
 	else
+	{
+		ray->hv_Xa = 64;
 		ray->vx = floor(data->px / GRID) * GRID + GRID;
+	}
+	ray->hv_Ya = 64 * tan(ray->radian);
 	ray->vy = data->py + (data->px - ray->vx) * ray->tan_ang;
-	ray->next_h = fabs(GRID / ray->sin_ang); //check permadi for a different approach
-	ray->next_v = fabs(GRID / ray->cos_ang);
-	ray->dist_h = sqrt((data->px - ray->hx) * (data->px - ray->hx) + //distance to the first intersect
-	(data->py - ray->hy) * (data->py - ray->hy));
-	ray->dist_v = sqrt((data->px - ray->vx) * (data->px - ray->vx) +
-	(data->py - ray->vy) * (data->py - ray->vy));
-
+	// ray->next_h = fabs(GRID / ray->sin_ang); //check permadi for a different approach
+	// ray->next_v = fabs(GRID / ray->cos_ang);
+	ray->dist_h = sqrt((data->px - ray->hx) * (data->px - ray->hx) + (data->py - ray->hy) * (data->py - ray->hy));
+	ray->dist_v = sqrt((data->px - ray->vx) * (data->px - ray->vx) + (data->py - ray->vy) * (data->py - ray->vy));
 	return (0);
 }
 
@@ -490,30 +507,38 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
-				// printf("col hx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_h;
 			}
 			else
 			{
+				double hx = ray->hx + ray->hz_Xa;
+				double hy = ray->hy + ray->hz_Ya;
+				double dist_h = sqrt((data->px - hx) * (data->px - hx) + (data->py - hy) * (data->py - hy));
+				printf("permadi hx %f hy %f dist_h %f\n", hx, hy, dist_h);
 				ray->dist_h += ray->next_h;
 				ray->hx += ray->next_h * ray->cos_ang;
 				ray->hy += ray->next_h * -ray->sin_ang;
+				printf("brunton hx %f hy %f dist_h %f\n", ray->hx, ray->hy, ray->dist_h);
 			}
 		}
 		else
 		{
 			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
 			{
-				// printf("col vx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_dist = ray->dist_v;
 			}
 			else
 			{
+				double vx = ray->vx + ray->hv_Xa;
+				double vy = ray->vy + ray->hv_Ya;
+				double dist_v = sqrt((data->px - vx) * (data->px - vx) + (data->py - vy) * (data->py - vy));
+				printf("permadi vx %f vy %f dist_v %f\n", vx, vy, dist_v);
 				ray->dist_v += ray->next_v;
 				ray->vx += ray->next_v * ray->cos_ang;
 				ray->vx += ray->next_v * -ray->sin_ang;
+				printf("brunton vx %f vy %f dist_v %f\n", ray->vx, ray->vy, ray->dist_v);
 			}
 		}
 	}
@@ -558,7 +583,7 @@ int	raycasting(t_data *data)
 	{
 		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
 		check_wall_collision(data, &ray, &wall, col);
-		draw_wall(col, &ray, data, &wall);
+		//draw_wall(col, &ray, data, &wall);
 		col++;
 		iter_ray += RAY_ANGLE;
 	}
