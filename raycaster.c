@@ -50,7 +50,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 	wall->hit = 0;
 	while (wall->hit == 0)
 	{
-		if (ray->dist_h <= ray->dist_v)
+		if (ray->dist_h < ray->dist_v)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
@@ -139,6 +139,27 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	return (0);
 }
 
+void	draw_ray(t_data *data, double wall_x, double wall_y)
+{
+	double	x;
+	double	y;
+
+	x = data->px;
+	y = data->py;
+	while ((x != (int)wall_x || y != (int)wall_y) && (x != (int)wall_x + 1 || y != (int)wall_y + 1 ) && (x != (int)wall_x - 1 || y != (int)wall_y - 1))
+	{
+		my_mlx_put_pixel(data, x, y, 0xFF00FF);
+		if (x < wall_x)
+			x++;
+		if (y < wall_y)
+			y++;
+		if (x > wall_x)
+			x--;
+		if (y > wall_y)
+			y--;
+	}
+}
+
 int	raycasting(t_data *data)
 {
 	double	iter_ray;
@@ -152,9 +173,10 @@ int	raycasting(t_data *data)
 	{
 		find_intersection(iter_ray, col, data, &ray);
 		check_wall_collision(data, &ray, &wall, col);
-		draw_wall(col, &ray, data, &wall);
+		//draw_wall(col, &ray, data, &wall);
+		draw_ray(data, wall.wall_x, wall.wall_y);
 		col++;
-		iter_ray -= RAY_ANGLE;
+		iter_ray -= RAY_ANGLE - RAY_ANGLE * 0.01;
 	}
 	return (0);
 }

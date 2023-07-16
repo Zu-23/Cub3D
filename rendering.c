@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/16 00:54:41 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/16 15:59:21 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,6 @@ void	my_mlx_put_pixel(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	draw_rays(t_data *data)
-{
-	int	i;
-	int	x;
-	int	y;
-
-	i = data->player_angle - (FOV / 2);
-	while (i < data->player_angle + (FOV / 2))
-	{
-		x = data->px;
-		y = data->py;
-		while (data->map[(int)(y / GRID)][(int)(x / GRID)] != '1')
-		{
-			x += 10 * cos(i * M_PI / 180);
-			y += 10 * sin(i * M_PI / 180);
-		}
-		my_mlx_put_pixel(data, x, y, 0xFFFF00);
-		i += 1;
-	}
-}
-
 void	draw_player(t_data *data)
 {
 	int	x;
@@ -62,7 +41,6 @@ void	draw_player(t_data *data)
 		}
 		x++;
 	}
-	draw_rays(data);
 }
 
 void	draw_square(t_data *data, int x, int y, int color)
