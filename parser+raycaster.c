@@ -456,13 +456,11 @@ void	find_player_location(t_data *data)
 	}
 }
 
-
-
 int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
-	
-
-	ray->radian = iter_ray * (M_PI / 180.0) - atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE);
+	(void) column;
+	// atan((PLANE_WIDTH / 2 - column) / PLAYER_DISTANCE)
+	ray->radian = iter_ray * (M_PI / 180.0);
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
@@ -512,14 +510,14 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 			}
 			else
 			{
-				double hx = ray->hx + ray->hz_Xa;
-				double hy = ray->hy + ray->hz_Ya;
-				double dist_h = sqrt((data->px - hx) * (data->px - hx) + (data->py - hy) * (data->py - hy));
-				printf("permadi hx %f hy %f dist_h %f\n", hx, hy, dist_h);
+				// double hx = ray->hx + ray->hz_Xa;
+				// double hy = ray->hy + ray->hz_Ya;
+				// double dist_h = sqrt((data->px - hx) * (data->px - hx) + (data->py - hy) * (data->py - hy));
+				// printf("permadi hx %f hy %f dist_h %f\n", hx, hy, dist_h);
 				ray->dist_h += ray->next_h;
 				ray->hx += ray->next_h * ray->cos_ang;
 				ray->hy += ray->next_h * -ray->sin_ang;
-				printf("brunton hx %f hy %f dist_h %f\n", ray->hx, ray->hy, ray->dist_h);
+				// printf("brunton hx %f hy %f dist_h %f\n", ray->hx, ray->hy, ray->dist_h);
 			}
 		}
 		else
@@ -531,14 +529,14 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 			}
 			else
 			{
-				double vx = ray->vx + ray->hv_Xa;
-				double vy = ray->vy + ray->hv_Ya;
-				double dist_v = sqrt((data->px - vx) * (data->px - vx) + (data->py - vy) * (data->py - vy));
-				printf("permadi vx %f vy %f dist_v %f\n", vx, vy, dist_v);
+				// double vx = ray->vx + ray->hv_Xa;
+				// double vy = ray->vy + ray->hv_Ya;
+				// double dist_v = sqrt((data->px - vx) * (data->px - vx) + (data->py - vy) * (data->py - vy));
+				// printf("permadi vx %f vy %f dist_v %f\n", vx, vy, dist_v);
 				ray->dist_v += ray->next_v;
 				ray->vx += ray->next_v * ray->cos_ang;
 				ray->vx += ray->next_v * -ray->sin_ang;
-				printf("brunton vx %f vy %f dist_v %f\n", ray->vx, ray->vy, ray->dist_v);
+				// printf("brunton vx %f vy %f dist_v %f\n", ray->vx, ray->vy, ray->dist_v);
 			}
 		}
 	}
@@ -583,7 +581,7 @@ int	raycasting(t_data *data)
 	{
 		find_intersection(iter_ray, col, data, &ray);//we will try to put a while in CWC
 		check_wall_collision(data, &ray, &wall, col);
-		//draw_wall(col, &ray, data, &wall);
+		draw_wall(col, &ray, data, &wall);
 		col++;
 		iter_ray += RAY_ANGLE;
 	}
