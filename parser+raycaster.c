@@ -465,28 +465,14 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	ray->sin_ang = sin(ray->radian);
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
 	if (-ray->sin_ang < 0)
-	{
-		ray->hz_Ya = -64;
 		ray->hy = floor(data->py / GRID) * GRID - 0.001;
-	}
 	else
-	{
-		ray->hz_Ya = 64;
 		ray->hy = floor(data->py / GRID) * GRID + GRID;
-	}
-	ray->hz_Xa = 64 / tan(ray->radian);
 	ray->hx = data->px + (data->py - ray->hy) / ray->tan_ang;
 	if (ray->cos_ang < 0)
-	{
-		ray->hv_Xa = -64;
 		ray->vx = floor(data->px / GRID) * GRID - 0.001;
-	}
 	else
-	{
-		ray->hv_Xa = 64;
 		ray->vx = floor(data->px / GRID) * GRID + GRID;
-	}
-	ray->hv_Ya = 64 * tan(ray->radian);
 	ray->vy = data->py + (data->px - ray->vx) * ray->tan_ang;
 	ray->next_h = fabs(GRID / ray->sin_ang); //check permadi for a different approach
 	ray->next_v = fabs(GRID / ray->cos_ang);
@@ -501,12 +487,12 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 	wall->hit = 0;
 	while (wall->hit == 0)
 	{
-		if (ray->dist_h <= ray->dist_v)
+		if (ray->dist_h < ray->dist_v)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
 				wall->hit = 1;
-				wall->wall_dist = ray->dist_h;
+				wall->wall_dist = ray->dist_h * cos(ray->radian - data->player_angle * (3.14 / 180));
 			}
 			else
 			{
@@ -516,7 +502,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 				// printf("permadi hx %f hy %f dist_h %f\n", hx, hy, dist_h);
 				ray->dist_h += ray->next_h;
 				ray->hx += ray->next_h * ray->cos_ang;
-				ray->hy += ray->next_h * -ray->sin_ang;
+				ray->hy += ray->next_h * ray->sin_ang;
 				// printf("brunton hx %f hy %f dist_h %f\n", ray->hx, ray->hy, ray->dist_h);
 			}
 		}
@@ -525,7 +511,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
 			{
 				wall->hit = 1;
-				wall->wall_dist = ray->dist_v;
+				wall->wall_dist = ray->dist_v * cos(ray->radian - data->player_angle * (3.14 / 180));
 			}
 			else
 			{
@@ -535,7 +521,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 				// printf("permadi vx %f vy %f dist_v %f\n", vx, vy, dist_v);
 				ray->dist_v += ray->next_v;
 				ray->vx += ray->next_v * ray->cos_ang;
-				ray->vx += ray->next_v * -ray->sin_ang;
+				ray->vy += ray->next_v * -ray->sin_ang;
 				// printf("brunton vx %f vy %f dist_v %f\n", ray->vx, ray->vy, ray->dist_v);
 			}
 		}
@@ -556,10 +542,10 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) ray;
 	(void) col;
 	(void) data;
-	// int wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
 	wall_height = ceil((double)GRID /  wall->wall_dist * PLAYER_DISTANCE);
+	if (wall_height >= 1023)
+		wall_height = 1023;
 	top_wall = PLANE_CENTER - (wall_height / 2);
-	//printf("col draw wall %d\n", col);
 	printf("wall height %f top wall %f wall dist %d\n", wall_height, top_wall, wall->wall_dist);
 	while (i <= wall_height && top_wall > 0)
 	{
