@@ -46,11 +46,11 @@ void	data_init(t_data *data) //might not be needed since we defined macros
 
 int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 {
-	(void) col;
+	// (void) col;
 	wall->hit = 0;
 	while (wall->hit == 0)
 	{
-		if (ray->dist_h < ray->dist_v)
+		if (ray->dist_h <= ray->dist_v)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
@@ -58,7 +58,7 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 				wall->hit = 1;
 				wall->wall_x = ray->hx;
 				wall->wall_y = ray->hy;
-				wall->wall_dist = ray->dist_h * cos(ray->radian - data->player_angle * (3.14 / 180));
+				wall->wall_dist = ray->dist_h * cos(atan((PLANE_WIDTH / 2 - col) / PLAYER_DISTANCE));
 			}
 			else
 			{
@@ -75,13 +75,13 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 				wall->hit = 1;
 				wall->wall_x = ray->vx;
 				wall->wall_y = ray->vy;
-				wall->wall_dist = ray->dist_v * cos(ray->radian - data->player_angle * (3.14 / 180));
+				wall->wall_dist = ray->dist_v * cos(atan((PLANE_WIDTH / 2 - col) / PLAYER_DISTANCE));
 			}
 			else
 			{
 				ray->dist_v += ray->next_v;
 				ray->vx += ray->next_v * ray->cos_ang;
-				ray->vx += ray->next_v * -ray->sin_ang;
+				ray->vy += ray->next_v * -ray->sin_ang;
 			}
 		}
 	}
@@ -100,13 +100,14 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	(void) ray;
 	(void) col;
 	(void) data;
-	// int wall_height1 = ceil(GRID_DIV_PROJ / wall->wall_dist); // could be used in the same equation for top wall
+	if (wall->wall_dist < 0.001)
+		wall->wall_dist = 0.001;
 	wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
 	if (wall_height >= PLANE_HEIGHT)
 		wall_height = PLANE_HEIGHT - 1;
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	printf("wall height %f top wall %f wall dist %f\n", wall_height, top_wall, wall->wall_dist);
-	printf("wallx %f wally %f\n", wall->wall_x, wall->wall_y);
+	// printf("wallx %f wally %f\n", wall->wall_x, wall->wall_y);
 	while (i <= wall_height)
 	{
 		my_mlx_put_pixel(data, col, top_wall + i, 0xFFFFFF);
@@ -116,16 +117,19 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 
 int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
-	ray->radian = iter_ray * (3.14 / 180.0);
+	ray->radian = iter_ray * (3.14 / 180.0) + 0.0001;
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
+	if (ray->cos_ang == 0)
+		ray->cos_ang = 0.001;
+
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
-	if (iter_ray > 0 && iter_ray < 180)
+	if (-ray->sin_ang < 0)
 		ray->hy = (data->py / GRID) * GRID - 0.001;
 	else
 		ray->hy = (data->py / GRID) * GRID + GRID;
 	ray->hx = data->px + (data->py - ray->hy) / ray->tan_ang;
-	if (iter_ray > 90 && iter_ray < 270)
+	if (ray->cos_ang < 0)
 		ray->vx = (data->px / GRID) * GRID - 0.001;
 	else
 		ray->vx = (data->px / GRID) * GRID + GRID;
