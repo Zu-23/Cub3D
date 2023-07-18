@@ -89,14 +89,8 @@ typedef struct s_data
 	int			height;
 	int			px;
 	int			py;
-	int			player_height;
 	int			player_fov;
-	int			player_plane_distance;
 	int			player_angle;
-	int			plane_height;
-	int			plane_width;
-	int			plane_center_x;
-	int			plane_center_y;
 	int			ray_angle;
 	mlx_t		*mlx;
 	mlx_image_t	*img;
@@ -463,6 +457,8 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	ray->radian = iter_ray * (M_PI / 180.0);
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
+	if (ray->cos_ang == 0)
+		ray->cos_ang = 0.001;
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
 	if (-ray->sin_ang < 0)
 		ray->hy = floor(data->py / GRID) * GRID - 0.001;
@@ -546,7 +542,6 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	if (wall_height >= 1023)
 		wall_height = 1023;
 	top_wall = PLANE_CENTER - (wall_height / 2);
-	printf("wall height %f top wall %f wall dist %d\n", wall_height, top_wall, wall->wall_dist);
 	while (i <= wall_height && top_wall > 0)
 	{
 		mlx_put_pixel(data->img, col, top_wall + i, 0xFFFFFFFF);
@@ -572,6 +567,20 @@ int	raycasting(t_data *data)
 		iter_ray += RAY_ANGLE;
 	}
 	return (0);
+}
+
+void	testing_texute_pixel(mlx_texture_t *test)
+{
+	printf("color? %d\n", *(test->pixels));
+}
+
+mlx_texture_t get_texture(t_data *data)
+{
+	mlx_texture_t *text_no = mlx_load_png(data->no.dest);
+	mlx_texture_t *text_ea = mlx_load_png(data->ea.dest);
+	mlx_texture_t *text_so = mlx_load_png(data->so.dest);
+	mlx_texture_t *text_we = mlx_load_png(data->so.dest);
+	testing_texture_pixel(text_no);
 }
 
 void	mlxinit(t_data *data)
@@ -618,6 +627,7 @@ int main(int ac, char **av)
 		//////END OF PARSING TEST/////
 		find_player_location(&data);
 		raycasting(&data);
+		get_texture(&data);
 		//mlx_loop_hook(data.mlx, buttons_hook, data.mlx);
 		mlx_loop(data.mlx);
 		mlx_terminate(data.mlx);
