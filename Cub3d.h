@@ -22,6 +22,7 @@
 # define LEFT 				123
 # define RIGHT				124
 # define GRID				64
+# define MAP_GRID			8
 # define PLAYER_HEIGHT		32
 # define PLANE_HEIGHT		1024
 # define PLANE_WIDTH		1024
