@@ -27,6 +27,8 @@ void	find_player_location(t_data *data)
 			{
 				data->px = (var.i + 1) * GRID - GRID;
 				data->py = (var.j + 1) * GRID - GRID;
+				data->player_x = (double)(var.i + 1) *8.0 - 8.0;
+				data->player_y = (double)(var.j + 1) *8.0 - 8.0;
 				check_player_angle(*(ft_strchr("WESN",
 							data->map[var.j][var.i])), data);
 				return ;
@@ -37,16 +39,8 @@ void	find_player_location(t_data *data)
 	}
 }
 
-void	data_init(t_data *data) //might not be needed since we defined macros
-{
-	ft_memset(data, 0, sizeof(t_data));
-	data->plane_height = 1024;
-	data->plane_width = 1024;
-}
-
 int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 {
-	// (void) col;
 	wall->hit = 0;
 	while (wall->hit == 0)
 	{
@@ -54,11 +48,10 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 		{
 			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
 			{
-				// printf("col hx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_x = ray->hx;
 				wall->wall_y = ray->hy;
-				wall->wall_dist = ray->dist_h * cos(atan((PLANE_WIDTH / 2 - col) / PLAYER_DISTANCE));
+				wall->wall_dist = ray->dist_h * cos(data->player_angle * M_PI / 180 - ray->radian);
 			}
 			else
 			{
@@ -71,11 +64,10 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 		{
 			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
 			{
-				// printf("col vx: %d\n", col);
 				wall->hit = 1;
 				wall->wall_x = ray->vx;
 				wall->wall_y = ray->vy;
-				wall->wall_dist = ray->dist_v * cos(atan((PLANE_WIDTH / 2 - col) / PLAYER_DISTANCE));
+				wall->wall_dist = ray->dist_v * cos(data->player_angle * M_PI / 180 - ray->radian);
 			}
 			else
 			{
@@ -86,8 +78,14 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 		}
 	}
 	return (0);
-	// check_wall_horizontal
-	// chec_wall_vertical
+}
+
+int	get_color(t_texture *texture, int x, int y)
+{
+	int	color;
+
+	color = *(unsigned int *)(texture->addr + (y * texture->line_length + x * (texture->bits_per_pixel / 8)));
+	return (color);
 }
 
 void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
@@ -97,20 +95,24 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	i;
 
 	i = 0;
-	(void) ray;
 	(void) col;
-	(void) data;
+	(void) ray;
 	if (wall->wall_dist < 0.001)
 		wall->wall_dist = 0.001;
 	wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
 	if (wall_height >= PLANE_HEIGHT)
 		wall_height = PLANE_HEIGHT - 1;
 	top_wall = PLANE_CENTER - (wall_height / 2);
-	printf("wall height %f top wall %f wall dist %f\n", wall_height, top_wall, wall->wall_dist);
-	// printf("wallx %f wally %f\n", wall->wall_x, wall->wall_y);
-	while (i <= wall_height)
+	while (i <= wall_height && top_wall + i < PLANE_HEIGHT)
 	{
-		my_mlx_put_pixel(data, col, top_wall + i, 0xFFFFFF);
+		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so, (int)(wall->wall_x * 16) % data->so.width, (int)((i / wall_height) * data->so.height)));
+		else if (ray->dist_h <= ray->dist_v && ray->sin_ang > 0)
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no, (int)(wall->wall_x * 16) % data->no.width, (int)((i / wall_height) * data->no.height)));
+		else if (ray->dist_h > ray->dist_v && ray->cos_ang < 0)
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea, (int)(wall->wall_y * 16) % data->ea.width, (int)((i / wall_height) * data->ea.height)));
+		else if (ray->dist_h > ray->dist_v && ray->cos_ang > 0)
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we, (int)(wall->wall_y * 16) % data->we.width, (int)((i / wall_height) * data->we.height)));
 		i++;
 	}
 }
@@ -122,7 +124,6 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	ray->sin_ang = sin(ray->radian);
 	if (ray->cos_ang == 0)
 		ray->cos_ang = 0.001;
-
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
 	if (-ray->sin_ang < 0)
 		ray->hy = (data->py / GRID) * GRID - 0.001;
@@ -189,7 +190,7 @@ int	raycasting(t_data *data)
 		find_intersection(iter_ray, col, data, &ray);
 		check_wall_collision(data, &ray, &wall, col);
 		draw_wall(col, &ray, data, &wall);
-		draw_ray(data, wall);
+		//draw_ray(data, wall);
 		col++;
 		iter_ray -= RAY_ANGLE - RAY_ANGLE * 0.01;
 	}

@@ -13,7 +13,6 @@ int	main(int ac, char **av)
 		check_data(&data);
 		find_player_location(&data);
 		render(&data);
-		//printf("player x %d y %d angle %d\n", data.px, data.py, data.player_angle);
 	}
 	else
 		ft_error("Error\nwrong number of arguments\n");
