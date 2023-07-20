@@ -5,6 +5,7 @@
 # include "lib_gnl/lib/libft.h"
 # include <fcntl.h>
 # include <math.h>
+# include <mlx.h>
 
 //delete later
 # include <stdio.h>
@@ -20,7 +21,7 @@
 # define ESC 				53
 # define LEFT 				123
 # define RIGHT				124
-# define GRID				32
+# define GRID				64
 # define PLAYER_HEIGHT		32
 # define PLANE_HEIGHT		1024
 # define PLANE_WIDTH		1024
@@ -28,7 +29,6 @@
 # define FOV				60
 # define PLANE_CENTER		512
 # define RAY_ANGLE			0.058
-# define GRID_DIV_PROJ		GRID * 1024
 
 typedef struct s_raycast
 {
@@ -50,6 +50,13 @@ typedef struct s_texture
 {
 	char		id[3];
 	char		dest[200];
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			width;
+	int			height;
 }				t_texture;
 
 typedef struct s_wall
@@ -90,14 +97,12 @@ typedef struct s_data
 	int			height;
 	int			px;
 	int			py;
-	int			player_height;
+	double		player_x;
+	double		player_y;
 	int			player_fov;
-	int			player_plane_distance;
 	int			player_angle;
 	int			plane_height;
 	int			plane_width;
-	int			plane_center_x;
-	int			plane_center_y;
 	int			ray_angle;
 	void		*mlx;
 	void		*win;
@@ -106,6 +111,12 @@ typedef struct s_data
 	int			bits_per_pixel;
 	int			line_length;
 	int			endian;
+	int			up;
+	int			down;
+	int			left;
+	int			right;
+	int			turn_left;
+	int			turn_right;
 }				t_data;
 
 int		parse_file(int fd, t_data *data);
