@@ -27,8 +27,8 @@ void	find_player_location(t_data *data)
 			{
 				data->px = (var.i + 1) * GRID - GRID;
 				data->py = (var.j + 1) * GRID - GRID;
-				data->player_x = (double)(var.i + 1) *MAP_GRID - MAP_GRID;
-				data->player_y = (double)(var.j + 1) *MAP_GRID - MAP_GRID;
+				data->player_x = (var.i + 1) * MAP_GRID - MAP_GRID;
+				data->player_y = (var.j + 1) * MAP_GRID - MAP_GRID;
 				check_player_angle(*(ft_strchr("WESN",
 							data->map[var.j][var.i])), data);
 				return ;
@@ -82,15 +82,6 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 	return (0);
 }
 
-int	get_color(t_texture *texture, int x, int y)
-{
-	int	color;
-
-	color = *(unsigned int *)(texture->addr + (y * texture->line_length + x
-				* (texture->bits_per_pixel / 8)));
-	return (color);
-}
-
 void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 {
 	double	wall_height;
@@ -103,8 +94,8 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	if (wall->wall_dist < 0.001)
 		wall->wall_dist = 0.001;
 	wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
-	if (wall_height > PLANE_HEIGHT * 5)
-		wall_height = PLANE_HEIGHT * 4;
+	if (wall_height > PLANE_HEIGHT * 3)
+		wall_height = PLANE_HEIGHT * 3;
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	while (i <= wall_height && top_wall + i < PLANE_HEIGHT)
 	{
