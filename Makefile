@@ -7,7 +7,7 @@ LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
 LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
 LIBFT :=	lib_gnl/lib/libft.a
 GNL	:=		lib_gnl/gnl/get_next_line.o
-SRC :=		parser.c main.c rendering.c raycaster.c hooks.c movements.c
+SRC :=		parser.c main.c rendering.c raycaster.c hooks.c movements.c rendering2.c
 OBJ	:=		$(SRC:.c=.o)
 
 all: $(NAME)
