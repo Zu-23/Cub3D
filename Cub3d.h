@@ -126,5 +126,21 @@ int		ft_error(char *str);
 void	render(t_data *data);
 int		raycasting(t_data *data);
 void	my_mlx_put_pixel(t_data *data, int x, int y, int color);
+void	draw_sky_floor(t_data *data);
+void	draw_map(t_data *data);
+void	draw_player(t_data *data);
+void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall);
+int		get_color(t_texture *texture, int x, int y);
+void	move_backwards(t_data *data, int x, int y);
+void	move_forward(t_data *data, int x, int y);
+void	move_left(t_data *data, int x, int y);
+void	move_right(t_data *data, int x, int y);
+void	turn_left(t_data *data);
+void	turn_right(t_data *data);
+int		key_hook(int keycode, t_data *data);
+int		exit_hook(t_data *data);
+int		key_release(int keycode, t_data *data);
+int		loop_hook(t_data *data);
+void	update(t_data *data);
 
 #endif

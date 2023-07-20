@@ -51,7 +51,8 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 				wall->hit = 1;
 				wall->wall_x = ray->hx;
 				wall->wall_y = ray->hy;
-				wall->wall_dist = ray->dist_h * cos(data->player_angle * M_PI / 180 - ray->radian);
+				wall->wall_dist = ray->dist_h * cos(data->player_angle * M_PI
+						/ 180 - ray->radian);
 			}
 			else
 			{
@@ -67,7 +68,8 @@ int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 				wall->hit = 1;
 				wall->wall_x = ray->vx;
 				wall->wall_y = ray->vy;
-				wall->wall_dist = ray->dist_v * cos(data->player_angle * M_PI / 180 - ray->radian);
+				wall->wall_dist = ray->dist_v * cos(data->player_angle * M_PI
+						/ 180 - ray->radian);
 			}
 			else
 			{
@@ -84,7 +86,8 @@ int	get_color(t_texture *texture, int x, int y)
 {
 	int	color;
 
-	color = *(unsigned int *)(texture->addr + (y * texture->line_length + x * (texture->bits_per_pixel / 8)));
+	color = *(unsigned int *)(texture->addr + (y * texture->line_length + x
+				* (texture->bits_per_pixel / 8)));
 	return (color);
 }
 
@@ -95,24 +98,32 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	i;
 
 	i = 0;
-	(void) col;
-	(void) ray;
+	(void)col;
+	(void)ray;
 	if (wall->wall_dist < 0.001)
 		wall->wall_dist = 0.001;
 	wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
-	if (wall_height >= PLANE_HEIGHT)
-		wall_height = PLANE_HEIGHT - 1;
+	if (wall_height > PLANE_HEIGHT * 5)
+		wall_height = PLANE_HEIGHT * 4;
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	while (i <= wall_height && top_wall + i < PLANE_HEIGHT)
 	{
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
-			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so, (int)(wall->wall_x * 16) % data->so.width, (int)((i / wall_height) * data->so.height)));
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so,
+					(int)(wall->wall_x * 16) % data->so.width, (int)((i
+							/ wall_height) * data->so.height)));
 		else if (ray->dist_h <= ray->dist_v && ray->sin_ang > 0)
-			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no, (int)(wall->wall_x * 16) % data->no.width, (int)((i / wall_height) * data->no.height)));
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no,
+					(int)(wall->wall_x * 16) % data->no.width, (int)((i
+							/ wall_height) * data->no.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang < 0)
-			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea, (int)(wall->wall_y * 16) % data->ea.width, (int)((i / wall_height) * data->ea.height)));
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea,
+					(int)(wall->wall_y * 16) % data->ea.width, (int)((i
+							/ wall_height) * data->ea.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang > 0)
-			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we, (int)(wall->wall_y * 16) % data->we.width, (int)((i / wall_height) * data->we.height)));
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we,
+					(int)(wall->wall_y * 16) % data->we.width, (int)((i
+							/ wall_height) * data->we.height)));
 		i++;
 	}
 }
@@ -138,43 +149,43 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 	ray->next_h = fabs(GRID / ray->sin_ang);
 	ray->next_v = fabs(GRID / ray->cos_ang);
 	ray->dist_h = sqrt((data->px - ray->hx) * (data->px - ray->hx) + \
-			(data->py - ray->hy) * (data->py - ray->hy));
+						(data->py - ray->hy) * (data->py - ray->hy));
 	ray->dist_v = sqrt((data->px - ray->vx) * (data->px - ray->vx) + \
-			(data->py - ray->vy) * (data->py - ray->vy));
+						(data->py - ray->vy) * (data->py - ray->vy));
 	return (0);
 }
 
-void	draw_ray(t_data *data, t_wall wall)
-{
-	double	slope;
-	double	y_intercept;
-	double	px;
-	double	py;
-	double	tmp;
-	double	wall_x;
-	double	wall_y;
+// void	draw_ray(t_data *data, t_wall wall)
+// {
+// 	double	slope;
+// 	double	y_intercept;
+// 	double	px;
+// 	double	py;
+// 	double	tmp;
+// 	double	wall_x;
+// 	double	wall_y;
 
-	px = (double)data->px;
-	py = (double)data->py;
-	wall_x = wall.wall_x;
-	wall_y = wall.wall_y;
-	slope = (data->py - wall.wall_y) / (data->px - wall.wall_x);
-	y_intercept = data->py - slope * data->px;
-	if (px >= wall_x)
-	{
-		tmp = px;
-		px = wall_x;
-		wall_x = tmp;
-		tmp = py;
-		py = wall_y;
-		wall_y = tmp;
-	}
-	while (px <= wall_x)
-	{
-		my_mlx_put_pixel(data, px, slope * px + y_intercept, 0x00FF00);
-		px++;
-	}
-}
+// 	px = (double)data->px;
+// 	py = (double)data->py;
+// 	wall_x = wall.wall_x;
+// 	wall_y = wall.wall_y;
+// 	slope = (data->py - wall.wall_y) / (data->px - wall.wall_x);
+// 	y_intercept = data->py - slope * data->px;
+// 	if (px >= wall_x)
+// 	{
+// 		tmp = px;
+// 		px = wall_x;
+// 		wall_x = tmp;
+// 		tmp = py;
+// 		py = wall_y;
+// 		wall_y = tmp;
+// 	}
+// 	while (px <= wall_x)
+// 	{
+// 		my_mlx_put_pixel(data, px, slope * px + y_intercept, 0x00FF00);
+// 		px++;
+// 	}
+// }
 
 int	raycasting(t_data *data)
 {
@@ -190,7 +201,6 @@ int	raycasting(t_data *data)
 		find_intersection(iter_ray, col, data, &ray);
 		check_wall_collision(data, &ray, &wall, col);
 		draw_wall(col, &ray, data, &wall);
-		//draw_ray(data, wall);
 		col++;
 		iter_ray -= RAY_ANGLE - RAY_ANGLE * 0.01;
 	}
