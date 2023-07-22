@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 23:55:38 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/21 00:04:25 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/21 15:09:29 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 void	get_textures(t_data *data)
 {
-	data->no.img = mlx_xpm_file_to_image(data->mlx, "wall1.xpm",
+	data->no.img = mlx_xpm_file_to_image(data->mlx, data->no.dest,
 			&data->no.width, &data->no.height);
 	data->no.addr = mlx_get_data_addr(data->no.img, &data->no.bits_per_pixel,
 			&data->no.line_length, &data->no.endian);
-	data->so.img = mlx_xpm_file_to_image(data->mlx, "wall2.xpm",
+	data->so.img = mlx_xpm_file_to_image(data->mlx, data->so.dest,
 			&data->so.width, &data->so.height);
 	data->so.addr = mlx_get_data_addr(data->so.img, &data->so.bits_per_pixel,
 			&data->so.line_length, &data->so.endian);
-	data->we.img = mlx_xpm_file_to_image(data->mlx, "wall3.xpm",
+	data->we.img = mlx_xpm_file_to_image(data->mlx, data->we.dest,
 			&data->we.width, &data->we.height);
 	data->we.addr = mlx_get_data_addr(data->we.img, &data->we.bits_per_pixel,
 			&data->we.line_length, &data->we.endian);
-	data->ea.img = mlx_xpm_file_to_image(data->mlx, "wall4.xpm",
+	data->ea.img = mlx_xpm_file_to_image(data->mlx, data->ea.dest,
 			&data->ea.width, &data->ea.height);
 	data->ea.addr = mlx_get_data_addr(data->ea.img, &data->ea.bits_per_pixel,
 			&data->ea.line_length, &data->ea.endian);

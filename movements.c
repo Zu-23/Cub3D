@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 21:31:29 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/21 00:50:07 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/22 18:30:26 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	move_right(t_data *data, int x, int y)
 
 void	turn_left(t_data *data)
 {
-	data->player_angle += 5;
+	data->player_angle += 8;
 	if (data->player_angle < 0)
 		data->player_angle += 360;
 }
