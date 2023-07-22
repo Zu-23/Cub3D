@@ -144,5 +144,4 @@ void	update(t_data *data);
 void	get_textures(t_data *data);
 int		get_color(t_texture *texture, int x, int y);
 
-
 #endif

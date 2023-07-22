@@ -12,6 +12,8 @@ int	main(int ac, char **av)
 		parse_file(fd, &data);
 		check_data(&data);
 		find_player_location(&data);
+		printf("player x %d player y %d\n", data.px, data.py);
+		printf("player angle %d\n", data.player_angle);
 		render(&data);
 	}
 	else

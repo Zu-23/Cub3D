@@ -119,7 +119,7 @@ int	check_valid_line(char *line, t_data *data)
 
 	i = 0;
 	j = 0;
-	content = "01WESN ";
+	content = "01ESNW ";
 	if (!data->ea.id[0] || !data->no.id[0] || !data->so.id[0] || !data->we.id[0]
 		|| !data->c.id[0] || !data->f.id[0])
 		return (-1);
@@ -184,7 +184,7 @@ int	evaluate_parse_functions(char *line, t_data *data)
 		return (-1);
 	if (success == 1)
 		return (0);
-	if (parse_map(line, data, "01WESN "))
+	if (parse_map(line, data, "01ESNW "))
 		return (-1);
 	return (0);
 }

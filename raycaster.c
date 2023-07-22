@@ -23,13 +23,13 @@ void	find_player_location(t_data *data)
 		var.i = 0;
 		while (data->map[var.j][var.i])
 		{
-			if (ft_strchr("WESN", data->map[var.j][var.i]))
+			if (ft_strchr("ESNW", data->map[var.j][var.i]))
 			{
-				data->px = (var.i + 1) * GRID - GRID;
-				data->py = (var.j + 1) * GRID - GRID;
-				data->player_x = (var.i + 1) * MAP_GRID - MAP_GRID;
-				data->player_y = (var.j + 1) * MAP_GRID - MAP_GRID;
-				check_player_angle(*(ft_strchr("WESN",
+				data->px = (var.i) * GRID + GRID / 2;
+				data->py = (var.j) * GRID + GRID / 2;
+				data->player_x = (var.i) * MAP_GRID + MAP_GRID / 2;
+				data->player_y = (var.j) * MAP_GRID + MAP_GRID / 2;
+				check_player_angle(*(ft_strchr("ESNW",
 							data->map[var.j][var.i])), data);
 				return ;
 			}
@@ -101,19 +101,19 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	{
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so,
-					(int)(wall->wall_x * 16) % data->so.width, (int)((i
+					(int)(wall->wall_x * 4) % data->so.width, (int)((i
 							/ wall_height) * data->so.height)));
 		else if (ray->dist_h <= ray->dist_v && ray->sin_ang > 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no,
-					(int)(wall->wall_x * 16) % data->no.width, (int)((i
+					(int)(wall->wall_x * 4) % data->no.width, (int)((i
 							/ wall_height) * data->no.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea,
-					(int)(wall->wall_y * 16) % data->ea.width, (int)((i
+					(int)(wall->wall_y * 4) % data->ea.width, (int)((i
 							/ wall_height) * data->ea.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang > 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we,
-					(int)(wall->wall_y * 16) % data->we.width, (int)((i
+					(int)(wall->wall_y * 4) % data->we.width, (int)((i
 							/ wall_height) * data->we.height)));
 		i++;
 	}
