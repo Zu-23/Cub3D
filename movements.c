@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 21:31:29 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/22 18:30:26 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/23 15:58:10 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ void	move_backwards(t_data *data, int x, int y)
 		|| data->map[(int)((data->py + 7) / GRID)][(int)((data->px + 7)
 			/ GRID)] == '1' || data->map[(int)((data->py - 7)
 			/ GRID)][(int)((data->px - 7) / GRID)] == '1'
-		|| data->map[(int)((data->py - 21) / GRID)][(int)((data->px + 21)
-			/ GRID)] == '1' || data->map[(int)((data->py + 21)
-			/ GRID)][(int)((data->px - 21) / GRID)] == '1'
-		|| data->map[(int)((data->py + 21) / GRID)][(int)((data->px + 21)
-			/ GRID)] == '1' || data->map[(int)((data->py - 21)
-			/ GRID)][(int)((data->px - 21) / GRID)] == '1')
+		|| data->map[(int)((data->py - 15) / GRID)][(int)((data->px + 15)
+			/ GRID)] == '1' || data->map[(int)((data->py + 15)
+			/ GRID)][(int)((data->px - 15) / GRID)] == '1'
+		|| data->map[(int)((data->py + 15) / GRID)][(int)((data->px + 15)
+			/ GRID)] == '1' || data->map[(int)((data->py - 15)
+			/ GRID)][(int)((data->px - 15) / GRID)] == '1')
 	{
 		data->px = x;
 		data->py = y;
@@ -50,12 +50,12 @@ void	move_forward(t_data *data, int x, int y)
 		|| data->map[(int)((data->py + 7) / GRID)][(int)((data->px + 7)
 			/ GRID)] == '1' || data->map[(int)((data->py - 7)
 			/ GRID)][(int)((data->px - 7) / GRID)] == '1'
-		|| data->map[(int)((data->py - 21) / GRID)][(int)((data->px + 21)
-			/ GRID)] == '1' || data->map[(int)((data->py + 21)
-			/ GRID)][(int)((data->px - 21) / GRID)] == '1'
-		|| data->map[(int)((data->py + 21) / GRID)][(int)((data->px + 21)
-			/ GRID)] == '1' || data->map[(int)((data->py - 21)
-			/ GRID)][(int)((data->px - 21) / GRID)] == '1')
+		|| data->map[(int)((data->py - 15) / GRID)][(int)((data->px + 15)
+			/ GRID)] == '1' || data->map[(int)((data->py + 15)
+			/ GRID)][(int)((data->px - 15) / GRID)] == '1'
+		|| data->map[(int)((data->py + 15) / GRID)][(int)((data->px + 15)
+			/ GRID)] == '1' || data->map[(int)((data->py - 15)
+			/ GRID)][(int)((data->px - 15) / GRID)] == '1')
 	{
 		data->px = x;
 		data->py = y;
@@ -76,12 +76,12 @@ void	move_left(t_data *data, int x, int y)
 		|| data->map[(int)((data->py + 7) / GRID)][(int)((data->px + 7)
 			/ GRID)] == '1' || data->map[(int)((data->py - 7)
 			/ GRID)][(int)((data->px - 7) / GRID)] == '1'
-		|| data->map[(int)((data->py - 21) / GRID)][(int)((data->px + 21)
-			/ GRID)] == '1' || data->map[(int)((data->py + 21)
-			/ GRID)][(int)((data->px - 21) / GRID)] == '1'
-		|| data->map[(int)((data->py + 21) / GRID)][(int)((data->px + 21)
-			/ GRID)] == '1' || data->map[(int)((data->py - 21)
-			/ GRID)][(int)((data->px - 21) / GRID)] == '1')
+		|| data->map[(int)((data->py - 15) / GRID)][(int)((data->px + 15)
+			/ GRID)] == '1' || data->map[(int)((data->py + 15)
+			/ GRID)][(int)((data->px - 15) / GRID)] == '1'
+		|| data->map[(int)((data->py + 15) / GRID)][(int)((data->px + 15)
+			/ GRID)] == '1' || data->map[(int)((data->py - 15)
+			/ GRID)][(int)((data->px - 15) / GRID)] == '1')
 	{
 		data->px = x;
 		data->py = y;
@@ -102,12 +102,12 @@ void	move_right(t_data *data, int x, int y)
 		|| data->map[(int)((data->py + 7) / GRID)][(int)((data->px + 7)
 			/ GRID)] == '1' || data->map[(int)((data->py - 7)
 			/ GRID)][(int)((data->px - 7) / GRID)] == '1'
-		|| data->map[(int)((data->py - 21) / GRID)][(int)((data->px + 21)
-			/ GRID)] == '1' || data->map[(int)((data->py + 21)
-			/ GRID)][(int)((data->px - 21) / GRID)] == '1'
-		|| data->map[(int)((data->py + 21) / GRID)][(int)((data->px + 21)
-			/ GRID)] == '1' || data->map[(int)((data->py - 21)
-			/ GRID)][(int)((data->px - 21) / GRID)] == '1')
+		|| data->map[(int)((data->py - 15) / GRID)][(int)((data->px + 15)
+			/ GRID)] == '1' || data->map[(int)((data->py + 15)
+			/ GRID)][(int)((data->px - 15) / GRID)] == '1'
+		|| data->map[(int)((data->py + 15) / GRID)][(int)((data->px + 15)
+			/ GRID)] == '1' || data->map[(int)((data->py - 15)
+			/ GRID)][(int)((data->px - 15) / GRID)] == '1')
 	{
 		data->px = x;
 		data->py = y;
