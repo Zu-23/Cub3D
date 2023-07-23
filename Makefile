@@ -1,7 +1,7 @@
 NAME :=		cube3D
 
 CC :=		gcc
-FLAGS :=	-Wall -Wextra -Werror
+FLAGS :=	-Wall -Wextra -Werror -fsanitize=address
 DIR :=		minilibx-linux
 LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
 LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
