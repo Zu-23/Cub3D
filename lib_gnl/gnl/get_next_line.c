@@ -6,15 +6,16 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 15:07:57 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/07/25 18:55:46 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/25 19:00:08 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#define BUFFER_SIZE 1
 
-size_t	ftstrlen(char *str)
+ssize_t	ftstrlen(char *str)
 {
-	size_t	c;
+	ssize_t	c;
 
 	c = 0;
 	if (str == NULL)
@@ -24,15 +25,15 @@ size_t	ftstrlen(char *str)
 	return (c);
 }
 
-void	treat_line(char **line_addr, char *buf, size_t end, size_t start)
+void	treat_line(char **line_addr, char *buf, ssize_t end, ssize_t start)
 {
 	char	*tmp;
-	size_t	len;
-	size_t	i;
+	ssize_t	len;
+	ssize_t	i;
 
 	i = -1;
 	len = ftstrlen(*line_addr);
-	tmp = (char *)malloc(len + end - start + 1);
+	tmp = (char *) malloc(len + end - start + 1);
 	if (!tmp)
 		return ;
 	while (++i < len)
@@ -50,9 +51,9 @@ void	treat_line(char **line_addr, char *buf, size_t end, size_t start)
 	}
 }
 
-int	read_buf(int fd, char *buf, size_t buf_size, size_t i)
+int	read_buf(int fd, char *buf, ssize_t	buf_size, ssize_t i)
 {
-	size_t	r;
+	ssize_t	r;
 
 	if (i == 0)
 	{
@@ -67,8 +68,8 @@ int	read_buf(int fd, char *buf, size_t buf_size, size_t i)
 
 char	*get_next_line(int fd)
 {
-	static size_t	index;
-	size_t			i;
+	static ssize_t	index;
+	ssize_t			i;
 	static char		buf[BUFFER_SIZE];
 	char			*line;
 

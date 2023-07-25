@@ -6,14 +6,14 @@
 #    By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/25 16:27:08 by zhaddoum          #+#    #+#              #
-#    Updated: 2023/07/25 18:37:38 by alemsafi         ###   ########.fr        #
+#    Updated: 2023/07/25 18:58:36 by alemsafi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME :=		cube3D
 
 CC :=		gcc
-FLAGS :=	-Wall -Wextra -Werror
+FLAGS :=	-Wall -Wextra -Werror -fsanitize=address
 LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
 LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
 LIBFT :=	lib_gnl/lib/libft.a
