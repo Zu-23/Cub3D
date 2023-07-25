@@ -87,34 +87,39 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	wall_height;
 	double	top_wall;
 	double	i;
+	double	shift;
 
 	i = 0;
 	(void)col;
 	(void)ray;
+	shift = 0;
 	if (wall->wall_dist < 0.001)
 		wall->wall_dist = 0.001;
 	wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
-	if (wall_height > PLANE_HEIGHT * 3)
-		wall_height = PLANE_HEIGHT * 3;
 	top_wall = PLANE_CENTER - (wall_height / 2);
 	while (i <= wall_height && top_wall + i < PLANE_HEIGHT)
 	{
+		if (top_wall < 0)
+		{
+			shift = -top_wall;
+			top_wall = 0;
+		}
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so,
-					(int)(wall->wall_x * 12) % data->so.width, (int)((i
-							/ wall_height) * data->so.height)));
+					(int)(wall->wall_x * 12) % data->so.width, (int)((
+							(i + shift) / wall_height) * data->so.height)));
 		else if (ray->dist_h <= ray->dist_v && ray->sin_ang > 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no,
-					(int)(wall->wall_x * 12) % data->no.width, (int)((i
-							/ wall_height) * data->no.height)));
+					(int)(wall->wall_x * 12) % data->no.width, (int)((
+							(i + shift) / wall_height) * data->no.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea,
-					(int)(wall->wall_y * 12) % data->ea.width, (int)((i
-							/ wall_height) * data->ea.height)));
+					(int)(wall->wall_y * 12) % data->ea.width, (int)((
+							(i + shift) / wall_height) * data->ea.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang > 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we,
-					(int)(wall->wall_y * 12) % data->we.width, (int)((i
-							/ wall_height) * data->we.height)));
+					(int)(wall->wall_y * 12) % data->we.width, (int)((
+							(i + shift) / wall_height) * data->we.height)));
 		i++;
 	}
 }
