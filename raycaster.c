@@ -106,20 +106,20 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 		}
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so,
-					(int)(wall->wall_x * 12) % data->so.width, (int)((
-							(i + shift) / wall_height) * data->so.height)));
+					(int)(wall->wall_x * TEXTURE_SCALE) % data->so.width, (int)
+					(((i + shift) / wall_height) * data->so.height)));
 		else if (ray->dist_h <= ray->dist_v && ray->sin_ang > 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no,
-					(int)(wall->wall_x * 12) % data->no.width, (int)((
-							(i + shift) / wall_height) * data->no.height)));
+					(int)(wall->wall_x * TEXTURE_SCALE) % data->no.width, (int)
+					(((i + shift) / wall_height) * data->no.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea,
-					(int)(wall->wall_y * 12) % data->ea.width, (int)((
-							(i + shift) / wall_height) * data->ea.height)));
+					(int)(wall->wall_y * TEXTURE_SCALE) % data->ea.width, (int)
+					(((i + shift) / wall_height) * data->ea.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang > 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we,
-					(int)(wall->wall_y * 12) % data->we.width, (int)((
-							(i + shift) / wall_height) * data->we.height)));
+					(int)(wall->wall_y * TEXTURE_SCALE) % data->we.width, (int)
+					(((i + shift) / wall_height) * data->we.height)));
 		i++;
 	}
 }

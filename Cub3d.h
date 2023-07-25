@@ -17,11 +17,9 @@
 # define LEFT				123
 # define RIGHT 				124
 # define ESC 				53
-# define LEFT 				123
-# define RIGHT				124
 # define GRID				64
 # define MAP_GRID			8
-# define PLAYER_HEIGHT		32
+# define TEXTURE_SCALE		12
 # define PLANE_HEIGHT		1024
 # define PLANE_WIDTH		1024
 # define PLAYER_DISTANCE	886.81
@@ -96,13 +94,12 @@ typedef struct s_data
 	int			height;
 	int			px;
 	int			py;
-	double		player_x;
-	double		player_y;
+	int			player_x;
+	int			player_y;
 	int			player_fov;
 	int			player_angle;
 	int			plane_height;
 	int			plane_width;
-	int			ray_angle;
 	void		*mlx;
 	void		*win;
 	void		*img;
