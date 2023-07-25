@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycaster.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/25 18:34:45 by alemsafi          #+#    #+#             */
+/*   Updated: 2023/07/25 18:37:17 by alemsafi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Cub3d.h"
 
 void	check_player_angle(char p, t_data *data)
@@ -39,47 +51,18 @@ void	find_player_location(t_data *data)
 	}
 }
 
-int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
+void	init(double *wall_height, double *top_wall, double *shift, t_wall *wall)
 {
-	wall->hit = 0;
-	while (wall->hit == 0)
+	*shift = 0;
+	if (wall->wall_dist < 0.001)
+		wall->wall_dist = 0.001;
+	*wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
+	*top_wall = PLANE_CENTER - (*wall_height / 2);
+	if (*top_wall < 0)
 	{
-		if (ray->dist_h <= ray->dist_v)
-		{
-			if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
-			{
-				wall->hit = 1;
-				wall->wall_x = ray->hx;
-				wall->wall_y = ray->hy;
-				wall->wall_dist = ray->dist_h * cos(data->player_angle * M_PI
-						/ 180 - ray->radian);
-			}
-			else
-			{
-				ray->dist_h += ray->next_h;
-				ray->hx += ray->next_h * ray->cos_ang;
-				ray->hy += ray->next_h * -ray->sin_ang;
-			}
-		}
-		else
-		{
-			if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
-			{
-				wall->hit = 1;
-				wall->wall_x = ray->vx;
-				wall->wall_y = ray->vy;
-				wall->wall_dist = ray->dist_v * cos(data->player_angle * M_PI
-						/ 180 - ray->radian);
-			}
-			else
-			{
-				ray->dist_v += ray->next_v;
-				ray->vx += ray->next_v * ray->cos_ang;
-				ray->vy += ray->next_v * -ray->sin_ang;
-			}
-		}
+		*shift = -(*top_wall);
+		*top_wall = 0;
 	}
-	return (0);
 }
 
 void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
@@ -89,21 +72,9 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	i;
 	double	shift;
 
-	i = 0;
-	(void)col;
-	(void)ray;
-	shift = 0;
-	if (wall->wall_dist < 0.001)
-		wall->wall_dist = 0.001;
-	wall_height = ceil((double)GRID / wall->wall_dist * PLAYER_DISTANCE);
-	top_wall = PLANE_CENTER - (wall_height / 2);
-	while (i <= wall_height && top_wall + i < PLANE_HEIGHT)
+	(init(&wall_height, &top_wall, &shift, wall), (i = -1));
+	while (++i <= wall_height && top_wall + i < PLANE_HEIGHT)
 	{
-		if (top_wall < 0)
-		{
-			shift = -top_wall;
-			top_wall = 0;
-		}
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so,
 					(int)(wall->wall_x * TEXTURE_SCALE) % data->so.width, (int)
@@ -120,35 +91,7 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we,
 					(int)(wall->wall_y * TEXTURE_SCALE) % data->we.width, (int)
 					(((i + shift) / wall_height) * data->we.height)));
-		i++;
 	}
-}
-
-int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
-{
-	ray->radian = iter_ray * (3.14 / 180.0) + 0.0001;
-	ray->cos_ang = cos(ray->radian);
-	ray->sin_ang = sin(ray->radian);
-	if (ray->cos_ang == 0)
-		ray->cos_ang = 0.001;
-	ray->tan_ang = ray->sin_ang / ray->cos_ang;
-	if (-ray->sin_ang < 0)
-		ray->hy = (data->py / GRID) * GRID - 0.001;
-	else
-		ray->hy = (data->py / GRID) * GRID + GRID;
-	ray->hx = data->px + (data->py - ray->hy) / ray->tan_ang;
-	if (ray->cos_ang < 0)
-		ray->vx = (data->px / GRID) * GRID - 0.001;
-	else
-		ray->vx = (data->px / GRID) * GRID + GRID;
-	ray->vy = data->py + (data->px - ray->vx) * ray->tan_ang;
-	ray->next_h = fabs(GRID / ray->sin_ang);
-	ray->next_v = fabs(GRID / ray->cos_ang);
-	ray->dist_h = sqrt((data->px - ray->hx) * (data->px - ray->hx) + \
-						(data->py - ray->hy) * (data->py - ray->hy));
-	ray->dist_v = sqrt((data->px - ray->vx) * (data->px - ray->vx) + \
-						(data->py - ray->vy) * (data->py - ray->vy));
-	return (0);
 }
 
 // void	draw_ray(t_data *data, t_wall wall)

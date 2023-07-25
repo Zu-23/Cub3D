@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/25 18:36:10 by alemsafi          #+#    #+#             */
+/*   Updated: 2023/07/25 18:43:09 by alemsafi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -10,22 +22,22 @@
 # include <stdlib.h>
 # include <string.h>
 
-# define D					2
-# define S 					1
-# define A 					0
-# define W 					13
-# define LEFT				123
-# define RIGHT 				124
-# define ESC 				53
-# define GRID				64
-# define MAP_GRID			8
-# define TEXTURE_SCALE		12
-# define PLANE_HEIGHT		1024
-# define PLANE_WIDTH		1024
-# define PLAYER_DISTANCE	886.81
-# define FOV				60
-# define PLANE_CENTER		512
-# define RAY_ANGLE			0.058
+# define D 2
+# define S 1
+# define A 0
+# define W 13
+# define LEFT 123
+# define RIGHT 124
+# define ESC 53
+# define GRID 64
+# define MAP_GRID 8
+# define TEXTURE_SCALE 12
+# define PLANE_HEIGHT 1024
+# define PLANE_WIDTH 1024
+# define PLAYER_DISTANCE 886.81
+# define FOV 60
+# define PLANE_CENTER 512
+# define RAY_ANGLE 0.058
 
 typedef struct s_raycast
 {
@@ -41,7 +53,7 @@ typedef struct s_raycast
 	double		next_v;
 	double		dist_h;
 	double		dist_v;
-}t_rcst;
+}				t_rcst;
 
 typedef struct s_texture
 {
@@ -58,12 +70,12 @@ typedef struct s_texture
 
 typedef struct s_wall
 {
-	int		hit;
-	int		side_hit;
-	int		imgcol;
-	double	wall_x;
-	double	wall_y;
-	double	wall_dist;
+	int			hit;
+	int			side_hit;
+	int			imgcol;
+	double		wall_x;
+	double		wall_y;
+	double		wall_dist;
 }				t_wall;
 
 typedef struct s_var
@@ -114,30 +126,49 @@ typedef struct s_data
 	int			turn_left;
 	int			turn_right;
 }				t_data;
+/****************PARSING FUNCTIONS*******************/
 
-int					parse_file(int fd, t_data *data);
-void				find_player_location(t_data *data);
-void				check_data(t_data *data);
-int					ft_error(char *str);
-void				render(t_data *data);
-int					raycasting(t_data *data);
-void				my_mlx_put_pixel(t_data *data, int x, int y, int color);
-void				draw_sky_floor(t_data *data);
-void				draw_map(t_data *data);
-void				draw_player(t_data *data);
-void				draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall);
-unsigned int		get_color(t_texture *texture, int x, int y);
-void				move_backwards(t_data *data, int x, int y);
-void				move_forward(t_data *data, int x, int y);
-void				move_left(t_data *data, int x, int y);
-void				move_right(t_data *data, int x, int y);
-void				turn_left(t_data *data);
-void				turn_right(t_data *data);
-int					key_hook(int keycode, t_data *data);
-int					exit_hook(t_data *data);
-int					key_release(int keycode, t_data *data);
-int					loop_hook(t_data *data);
-void				update(t_data *data);
-void				get_textures(t_data *data);
+void			check_data(t_data *data);
+int				check_map(t_data *data);
+int				parse_file(int fd, t_data *data);
+int				parse_map(char *line, t_data *data, char *content);
+int				evaluate_parse_functions(char *line, t_data *data);
+int				check_player_position(t_data *data);
+int				backtrack(t_data *data, int row, int col);
+int				ft_error(char *str);
+int				check_rgb(char *rgb);
+int				parse_color(char *line, t_data *data, int *success);
+int				fill_texture(char *line, t_texture *texture, int *success);
+int				fill_color(char *line, t_color *color, int *success);
+int				parse_texture(char *line, t_data *data, int *success);
+int				check_valid_line(char *line, t_data *data);
+int				check_closed_walls(t_data *data);
+
+/***********************************/
+void			find_player_location(t_data *data);
+void			render(t_data *data);
+int				raycasting(t_data *data);
+void			my_mlx_put_pixel(t_data *data, int x, int y, int color);
+void			draw_sky_floor(t_data *data);
+void			draw_map(t_data *data);
+void			draw_player(t_data *data);
+void			draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall);
+unsigned int	get_color(t_texture *texture, int x, int y);
+void			move_backwards(t_data *data, int x, int y);
+void			move_forward(t_data *data, int x, int y);
+void			move_left(t_data *data, int x, int y);
+void			move_right(t_data *data, int x, int y);
+void			turn_left(t_data *data);
+void			turn_right(t_data *data);
+int				key_hook(int keycode, t_data *data);
+int				exit_hook(t_data *data);
+int				key_release(int keycode, t_data *data);
+int				loop_hook(t_data *data);
+void			update(t_data *data);
+void			get_textures(t_data *data);
+int				check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall,
+					int col);
+int				find_intersection(double iter_ray, int column, t_data *data,
+					t_rcst *ray);
 
 #endif
