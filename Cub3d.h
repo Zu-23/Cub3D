@@ -117,11 +117,26 @@ typedef struct s_data
 	int			turn_left;
 	int			turn_right;
 }				t_data;
+/****************PARSING FUNCTIONS*******************/
 
-int					parse_file(int fd, t_data *data);
-void				find_player_location(t_data *data);
 void				check_data(t_data *data);
+int					check_map(t_data *data);
+int					parse_file(int fd, t_data *data);
+int					parse_map(char *line, t_data *data, char *content);
+int					evaluate_parse_functions(char *line, t_data *data);
+int					check_player_position(t_data *data);
+int					backtrack(t_data *data, int row, int col);
 int					ft_error(char *str);
+int					check_rgb(char *rgb);
+int					parse_color(char *line, t_data *data, int *success);
+int					fill_texture(char *line, t_texture *texture, int *success);
+int					fill_color(char *line, t_color *color, int *success);
+int					parse_texture(char *line, t_data *data, int *success);
+int					check_valid_line(char *line, t_data *data);
+int					check_closed_walls(t_data *data);
+
+/***********************************/
+void				find_player_location(t_data *data);
 void				render(t_data *data);
 int					raycasting(t_data *data);
 void				my_mlx_put_pixel(t_data *data, int x, int y, int color);

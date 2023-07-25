@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rendering2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 23:55:38 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/23 16:02:34 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/25 17:18:00 by zhaddoum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	get_textures(t_data *data)
 			&data->ea.width, &data->ea.height);
 	data->ea.addr = mlx_get_data_addr(data->ea.img, &data->ea.bits_per_pixel,
 			&data->ea.line_length, &data->ea.endian);
+			
 }
 
 void	my_mlx_put_pixel(t_data *data, int x, int y, int color)

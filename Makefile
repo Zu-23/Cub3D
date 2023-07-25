@@ -1,13 +1,25 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/07/25 16:27:08 by zhaddoum          #+#    #+#              #
+#    Updated: 2023/07/25 17:02:54 by zhaddoum         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME :=		cube3D
 
 CC :=		gcc
-FLAGS :=	-Wall -Wextra -Werror -fsanitize=address
-DIR :=		minilibx-linux
+FLAGS :=	-Wall -Wextra -Werror
 LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
 LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
 LIBFT :=	lib_gnl/lib/libft.a
 GNL	:=		lib_gnl/gnl/get_next_line.o
-SRC :=		parser.c main.c rendering.c raycaster.c hooks.c movements.c rendering2.c
+SRC :=		parser.c main.c rendering.c raycaster.c hooks.c movements.c rendering2.c \
+parser2.c parser3.c
 OBJ	:=		$(SRC:.c=.o)
 
 all: $(NAME)
