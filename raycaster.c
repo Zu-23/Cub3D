@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:34:45 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/25 18:37:17 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:05:59 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	shift;
 
 	(init(&wall_height, &top_wall, &shift, wall), (i = -1));
-	while (++i <= wall_height && top_wall + i < PLANE_HEIGHT)
+	while (++i < wall_height && top_wall + i < PLANE_HEIGHT)
 	{
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so,

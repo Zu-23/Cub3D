@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:27:34 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/07/25 16:33:35 by zhaddoum         ###   ########.fr       */
+/*   Updated: 2023/07/25 20:18:24 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	parse_map(char *line, t_data *data, char *content)
 	t_var	var;
 	int		len;
 
+	(void)content;
 	var.i = 0;
 	var.j = 0;
 	var.k = 0;

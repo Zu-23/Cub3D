@@ -6,14 +6,14 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:36:10 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/25 18:43:09 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/27 18:22:45 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "lib_gnl/gnl/get_next_line.h"
+# include "get_next_line.h"
 # include "lib_gnl/lib/libft.h"
 # include <fcntl.h>
 # include <math.h>

@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:35:27 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/25 18:43:19 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/25 20:17:42 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 {
+	(void)column;
 	ray->radian = iter_ray * (3.14 / 180.0) + 0.0001;
 	ray->cos_ang = cos(ray->radian);
 	ray->sin_ang = sin(ray->radian);
@@ -77,6 +78,7 @@ void	vertical_intersection(t_data *data, t_rcst *ray, t_wall *wall)
 
 int	check_wall_collision(t_data *data, t_rcst *ray, t_wall *wall, int col)
 {
+	(void)col;
 	wall->hit = 0;
 	while (wall->hit == 0)
 	{

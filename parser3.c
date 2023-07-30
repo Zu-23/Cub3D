@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:31:49 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/07/25 18:23:59 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:13:10 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ int	fill_color(char *line, t_color *color, int *success)
 			|| color->green > 255) || (color->blue < 0 || color->blue > 255))
 		return (-1);
 	*success = 1;
-	printf("id %s red %d green %d blue %d\n", color->id, color->red,
-		color->green, color->blue);
 	return (0);
 }
 
@@ -92,10 +90,10 @@ int	check_valid_line(char *line, t_data *data)
 
 int	check_closed_walls(t_data *data)
 {
-	int	startrow;
-	int	startcol;
-	int	i;
-	int	j;
+	int		startrow;
+	int		startcol;
+	int		i;
+	size_t	j;
 
 	i = -1;
 	startrow = -1;
