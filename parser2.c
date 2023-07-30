@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:28:40 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/07/25 18:24:13 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:13:41 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,6 @@ int	fill_texture(char *line, t_texture *texture, int *success)
 		return (-1);
 	ft_strcpy(texture->id, ft_strtok(line, " "));
 	ft_strcpy(texture->dest, ft_strtok(NULL, " \n\r\f\t\v"));
-	printf("id: %s\ndest: %s\n", texture->id, texture->dest);
-	if (ft_strstr(texture->dest, ".xpm") == NULL)
-		return (printf("bruh"), -1);
 	*success = 1;
 	return (0);
 }
