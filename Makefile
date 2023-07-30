@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+         #
+#    By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/25 16:27:08 by zhaddoum          #+#    #+#              #
-#    Updated: 2023/07/27 18:29:25 by alemsafi         ###   ########.fr        #
+#    Updated: 2023/07/30 17:04:16 by zhaddoum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)
 OBJS_DIR = objs/
 
 CC :=		gcc
-CFLAGS :=	-Wall -Wextra -Werror
+CFLAGS :=	-Wall -Wextra -Werror -g
 LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
 LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
 LIBFT :=	lib_gnl/lib/libft.a
