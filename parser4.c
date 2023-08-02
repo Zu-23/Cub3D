@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 19:29:00 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/08/02 19:30:22 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/02 23:17:14 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	backtrack(t_data *data, int row, int col)
 	{
 		newcol = col + offset[i];
 		newrow = row + offset[3 - i];
-		if (data->map[newrow][newcol])
+		if (data->map[newrow][newcol] && data->map[newrow][newcol] != ' ')
 		{
 			if (data->map[newrow][newcol] == '0'
 				&& data->visited[newrow][newcol] == 0)
