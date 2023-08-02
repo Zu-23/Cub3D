@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:27:34 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/02 16:16:42 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:30:17 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,15 @@ int	parse_map(char *line, t_data *data, int flag)
 	t_var	var;
 	int		i;
 
-	var.i = 0;
-	var.j = 0;
-	var.k = 0;
+	var = (t_var){0, 0, 0};
 	i = 0;
-	while (ft_isspace(line[i]))
+	while (line[i] == ' ')
 		i++;
 	if ((!data->ea.id[0] || !data->no.id[0] || !data->so.id[0]
 			|| !data->we.id[0] || !data->c.id[0] || !data->f.id[0])
 		&& line[i] == '\n')
 		return (0);
-	printf("flag? %d\n", flag);
-	if (flag == 2 && line[i] == '\n')
-		return (-1);
-	if (check_valid_line(line, data))
+	if ((flag == 2 && line[i] == '\n') || check_valid_line(line, data))
 		return (-1);
 	str = malloc(ft_strlen(line) + 1);
 	if (!str)
@@ -43,9 +38,7 @@ int	parse_map(char *line, t_data *data, int flag)
 		str[var.j++] = line[var.i++];
 	}
 	str[var.j] = '\0';
-	ft_strcpy(data->map[data->height++], str);
-	free(str);
-	return (0);
+	return (ft_strcpy(data->map[data->height++], str), free(str), 0);
 }
 
 void	no_newline_for_map(t_data *data, int *flag, char *line)
@@ -69,8 +62,7 @@ int	evaluate_parse_functions(char *line, t_data *data)
 
 	success = 0;
 	i = 0;
-	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\r'
-		|| line[i] == '\v' || line[i] == '\f')
+	while (line[i] == ' ')
 		i++;
 	if (parse_texture(line, data, &success))
 		return (-1);
@@ -125,7 +117,8 @@ int	check_player_position(t_data *data)
 		while (data->map[var.j][var.i])
 		{
 			if (data->map[var.j][var.i] != '0'
-				&& data->map[var.j][var.i] != '1')
+				&& data->map[var.j][var.i] != '1'
+				&& data->map[var.j][var.i] != ' ')
 			{
 				if (p_pos == 0)
 					p_pos = 1;
@@ -136,33 +129,6 @@ int	check_player_position(t_data *data)
 		}
 		var.j++;
 		var.i = 0;
-	}
-	return (0);
-}
-
-int	backtrack(t_data *data, int row, int col)
-{
-	int	newrow;
-	int	newcol;
-	int	i;
-	int	*offset;
-
-	data->visited[row][col] = 1;
-	i = -1;
-	offset = (int[4]){0, 0, 1, -1};
-	while (++i < 4)
-	{
-		newcol = col + offset[i];
-		newrow = row + offset[3 - i];
-		if (data->map[newrow][newcol])
-		{
-			if (data->map[newrow][newcol] == '0'
-				&& data->visited[newrow][newcol] == 0)
-				if (newrow == 0 || backtrack(data, newrow, newcol))
-					return (1);
-		}
-		else
-			return (1);
 	}
 	return (0);
 }

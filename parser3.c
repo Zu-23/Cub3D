@@ -6,18 +6,11 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:31:49 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/02 16:09:49 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:29:54 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cub3d.h"
-
-int	ft_isspace(char c)
-{
-	if (c == ' ' || c == '\f' || c == '\r' || c == '\t' || c == '\v')
-		return (1);
-	return (0);
-}
 
 int	coom_counter(char *line)
 {
@@ -31,9 +24,9 @@ int	coom_counter(char *line)
 	while (line[++i] && line[i] != '\n')
 	{
 		if (state && ft_isspace(line[i - 1]) && ft_isdigit(line[i]))
-			ft_error("bruh");
+			ft_error("u hav been coomed(comas)\n");
 		if (coom == 2 && !ft_isspace(line[i]) && !ft_isdigit(line[i]))
-			(printf("%d\n", line[i]), ft_error("get_ccomec"));
+			(printf("%d\n", line[i]), ft_error("u hav been coomed(comas)\n"));
 		while (line[i] != '\n' && ft_isdigit(line[i]) && ++i)
 			state = 1;
 		if (line[i] == ',')
@@ -41,7 +34,7 @@ int	coom_counter(char *line)
 			if (state && ++coom)
 				state--;
 			else
-				ft_error("coomed\n");
+				ft_error("u hav been coomed(comas)\n");
 		}
 	}
 	return (coom);
@@ -56,7 +49,7 @@ int	fill_color(char *line, t_color *color, int *success)
 	if (color->id[0] != '\0')
 		return (-1);
 	if (coom_counter(line) != 2)
-		ft_error("u have bee coomned\n");
+		ft_error("u hav been coomed(comas)\n");
 	ft_strcpy(color->id, ft_strtok(line, " "));
 	while (i < 3)
 	{
@@ -108,7 +101,6 @@ int	check_valid_line(char *line, t_data *data)
 	i = 0;
 	j = 0;
 	content = "01ESNW ";
-	printf("%s\n", line);
 	if (!data->ea.id[0] || !data->no.id[0] || !data->so.id[0] || !data->we.id[0]
 		|| !data->c.id[0] || !data->f.id[0])
 		return (-1);
@@ -153,15 +145,4 @@ int	check_closed_walls(t_data *data)
 	if (backtrack(data, startrow, startcol))
 		return (-1);
 	return (0);
-}
-
-void	check_data(t_data *data)
-{
-	if (!data->ea.id[0] || !data->no.id[0] || !data->so.id[0]
-		|| !data->we.id[0])
-		ft_error("Error\nincorrect walls texture inputs\n");
-	if (!data->c.id[0] || !data->f.id[0])
-		ft_error("Error\nincorrect floor or ceiling inputs\n");
-	if (check_map(data))
-		ft_error("Error\nincorrect map inputs\n");
 }
