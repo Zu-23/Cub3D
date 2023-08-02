@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:31:49 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/02 19:29:54 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/02 23:26:25 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,21 +128,21 @@ int	check_closed_walls(t_data *data)
 	i = -1;
 	startrow = -1;
 	startcol = -1;
-	while (++i < data->height && startrow == -1 && startcol == -1)
+	while (++i < data->height)
 	{
 		j = -1;
 		while (++j < ft_strlen(data->map[i]))
 		{
 			if (data->map[i][j] == 'N' || data->map[i][j] == 'S'
-				|| data->map[i][j] == 'E' || data->map[i][j] == 'W')
+				|| data->map[i][j] == 'E' || data->map[i][j] == 'W'
+				|| data->map[i][j] == '0')
 			{
 				startrow = i;
 				startcol = j;
-				break ;
+				if (backtrack(data, startrow, startcol))
+					return (-1);
 			}
 		}
 	}
-	if (backtrack(data, startrow, startcol))
-		return (-1);
 	return (0);
 }

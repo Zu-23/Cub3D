@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:27:34 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/02 19:30:17 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/02 23:07:51 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	parse_map(char *line, t_data *data, int flag)
 	while (line[var.i] && line[var.i] != '\n')
 	{
 		while (line[var.i] == ' ' && var.i++)
-			str[var.j++] = '0';
+			str[var.j++] = ' ';
 		str[var.j++] = line[var.i++];
 	}
 	str[var.j] = '\0';

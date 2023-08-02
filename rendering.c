@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rendering.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 20:19:46 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/30 16:53:44 by zhaddoum         ###   ########.fr       */
+/*   Updated: 2023/08/02 23:28:04 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ void	draw_square(t_data *data, int x, int y, int color)
 	int	i;
 	int	j;
 
-	i = x * 1;
-	while (i < (x + GRID) * 1)
+	i = x;
+	while (i < (x + MAP_GRID))
 	{
-		j = y * 1;
-		while (j < (y + GRID) * 1)
+		j = y;
+		while (j < (y + MAP_GRID))
 		{
 			my_mlx_put_pixel(data, i, j, color);
 			j++;
@@ -59,19 +59,19 @@ void	draw_map(t_data *data)
 	int	y;
 
 	x = 0;
-	while (x < PLANE_HEIGHT)
+	while (x < PLANE_HEIGHT / MAP_GRID)
 	{
 		y = 0;
-		while (y < PLANE_WIDTH)
+		while (y < PLANE_WIDTH / MAP_GRID)
 		{
 			if (data->map[x][y] == '1')
-				draw_square(data, (y + 1) * MAP_GRID - MAP_GRID, (x + 1)
-					* MAP_GRID - MAP_GRID, 0xFF5400);
+				draw_square(data, (y) * MAP_GRID, (x)
+					* MAP_GRID, 0x0FFFF0);
 			else if (data->map[x][y] == '0' || data->map[x][y] == 'N'
 					|| data->map[x][y] == 'S' || data->map[x][y] == 'E'
 					|| data->map[x][y] == 'W')
-				draw_square(data, (y + 1) * MAP_GRID - MAP_GRID, (x + 1)
-					* MAP_GRID - MAP_GRID, 0x000000);
+				draw_square(data, (y) * MAP_GRID, (x)
+					* MAP_GRID, 0x000000);
 			y++;
 		}
 		x++;
