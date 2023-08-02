@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:31:49 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/07/30 20:19:38 by zhaddoum         ###   ########.fr       */
+/*   Updated: 2023/08/02 16:09:49 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,35 @@
 int	ft_isspace(char c)
 {
 	if (c == ' ' || c == '\f' || c == '\r' || c == '\t' || c == '\v')
-	{
 		return (1);
-	}
 	return (0);
 }
 
-int coom_counter(char *line)
+int	coom_counter(char *line)
 {
-    int i;
-    int coom;
-    int state;
+	int	i;
+	int	coom;
+	int	state;
 
-    i = 0;
-    coom = 0;
-    state = 0;
-    while (line[i] && line[i] != '\n')
-    {
-		if (state && line[i - 1] == ' ' && ft_isdigit(line[i]))
+	i = -1;
+	coom = 0;
+	state = 0;
+	while (line[++i] && line[i] != '\n')
+	{
+		if (state && ft_isspace(line[i - 1]) && ft_isdigit(line[i]))
 			ft_error("bruh");
-		if (coom == 2 && line[i] && !ft_isspace(line[i]) && !ft_isdigit(line[i]))
+		if (coom == 2 && !ft_isspace(line[i]) && !ft_isdigit(line[i]))
 			(printf("%d\n", line[i]), ft_error("get_ccomec"));
-		while (line[i] != '\n' && ft_isdigit(line[i]))
-		{
+		while (line[i] != '\n' && ft_isdigit(line[i]) && ++i)
 			state = 1;
-			i++;
-		}
-        if (line[i] == ',')
-        {
-            if (state)
-            {
-                coom++;
-                state--;            
-            }
+		if (line[i] == ',')
+		{
+			if (state && ++coom)
+				state--;
 			else
 				ft_error("coomed\n");
-        }
-		i++;
-    }
+		}
+	}
 	return (coom);
 }
 
@@ -117,6 +108,7 @@ int	check_valid_line(char *line, t_data *data)
 	i = 0;
 	j = 0;
 	content = "01ESNW ";
+	printf("%s\n", line);
 	if (!data->ea.id[0] || !data->no.id[0] || !data->so.id[0] || !data->we.id[0]
 		|| !data->c.id[0] || !data->f.id[0])
 		return (-1);

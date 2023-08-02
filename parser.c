@@ -6,28 +6,36 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:27:34 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/07/25 20:18:24 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/02 16:16:42 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cub3d.h"
 
-int	parse_map(char *line, t_data *data, char *content)
+int	parse_map(char *line, t_data *data, int flag)
 {
 	char	*str;
 	t_var	var;
-	int		len;
+	int		i;
 
-	(void)content;
 	var.i = 0;
 	var.j = 0;
 	var.k = 0;
+	i = 0;
+	while (ft_isspace(line[i]))
+		i++;
+	if ((!data->ea.id[0] || !data->no.id[0] || !data->so.id[0]
+			|| !data->we.id[0] || !data->c.id[0] || !data->f.id[0])
+		&& line[i] == '\n')
+		return (0);
+	printf("flag? %d\n", flag);
+	if (flag == 2 && line[i] == '\n')
+		return (-1);
 	if (check_valid_line(line, data))
 		return (-1);
 	str = malloc(ft_strlen(line) + 1);
 	if (!str)
 		return (-1);
-	len = ft_strlen(line);
 	while (line[var.i] && line[var.i] != '\n')
 	{
 		while (line[var.i] == ' ' && var.i++)
@@ -40,18 +48,30 @@ int	parse_map(char *line, t_data *data, char *content)
 	return (0);
 }
 
+void	no_newline_for_map(t_data *data, int *flag, char *line)
+{
+	if (data->ea.id[0] && data->no.id[0] && data->so.id[0] && data->we.id[0]
+		&& data->c.id[0] && data->f.id[0])
+	{
+		if (!*flag)
+			(*flag)++;
+		if (ft_strchr(line, '1') || ft_strchr(line, '0'))
+			if (*flag == 1)
+				(*flag)++;
+	}
+}
+
 int	evaluate_parse_functions(char *line, t_data *data)
 {
-	int	success;
-	int	i;
+	int			success;
+	int			i;
+	static int	flag;
 
 	success = 0;
 	i = 0;
 	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\r'
 		|| line[i] == '\v' || line[i] == '\f')
 		i++;
-	if (line[i] == '\n')
-		return (0);
 	if (parse_texture(line, data, &success))
 		return (-1);
 	if (success == 1)
@@ -60,7 +80,8 @@ int	evaluate_parse_functions(char *line, t_data *data)
 		return (-1);
 	if (success == 1)
 		return (0);
-	if (parse_map(line, data, "01ESNW "))
+	no_newline_for_map(data, &flag, line);
+	if (parse_map(line, data, flag))
 		return (-1);
 	return (0);
 }
@@ -128,7 +149,7 @@ int	backtrack(t_data *data, int row, int col)
 
 	data->visited[row][col] = 1;
 	i = -1;
-	offset = (int [4]){0, 0, 1, -1};
+	offset = (int[4]){0, 0, 1, -1};
 	while (++i < 4)
 	{
 		newcol = col + offset[i];
