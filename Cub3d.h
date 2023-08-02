@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:36:10 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/27 18:22:45 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/02 16:06:15 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ typedef struct s_data
 void			check_data(t_data *data);
 int				check_map(t_data *data);
 int				parse_file(int fd, t_data *data);
-int				parse_map(char *line, t_data *data, char *content);
+int				parse_map(char *line, t_data *data, int flag);
 int				evaluate_parse_functions(char *line, t_data *data);
 int				check_player_position(t_data *data);
 int				backtrack(t_data *data, int row, int col);
@@ -143,6 +143,7 @@ int				fill_color(char *line, t_color *color, int *success);
 int				parse_texture(char *line, t_data *data, int *success);
 int				check_valid_line(char *line, t_data *data);
 int				check_closed_walls(t_data *data);
+int				ft_isspace(char c);
 
 /***********************************/
 void			find_player_location(t_data *data);
