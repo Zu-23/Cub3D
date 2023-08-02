@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+         #
+#    By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/25 16:27:08 by zhaddoum          #+#    #+#              #
-#    Updated: 2023/07/30 17:04:16 by zhaddoum         ###   ########.fr        #
+#    Updated: 2023/08/02 19:31:44 by alemsafi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
 LIBFT :=	lib_gnl/lib/libft.a
 GNL	:=		get_next_line.o
 SRC :=		parser.c main.c rendering.c raycaster.c hooks.c movements.c rendering2.c \
-parser2.c parser3.c raycaster2.c get_next_line.c
+parser2.c parser3.c raycaster2.c get_next_line.c parser4.c
 OBJ	:=		$(SRC:.c=.o)
 
 LIB_OBJ_DIR := $(addprefix lib_gnl/lib/, $(LIBFT_OBJS))
