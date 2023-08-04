@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:31:49 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/02 23:26:25 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/04 19:43:35 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int	coom_counter(char *line)
 	while (line[++i] && line[i] != '\n')
 	{
 		if (state && ft_isspace(line[i - 1]) && ft_isdigit(line[i]))
-			ft_error("u hav been coomed(comas)\n");
+			ft_error("Error\ncomas\n");
 		if (coom == 2 && !ft_isspace(line[i]) && !ft_isdigit(line[i]))
-			(printf("%d\n", line[i]), ft_error("u hav been coomed(comas)\n"));
+			(printf("%d\n", line[i]), ft_error("Error\ncomas\n"));
 		while (line[i] != '\n' && ft_isdigit(line[i]) && ++i)
 			state = 1;
 		if (line[i] == ',')
@@ -34,7 +34,7 @@ int	coom_counter(char *line)
 			if (state && ++coom)
 				state--;
 			else
-				ft_error("u hav been coomed(comas)\n");
+				ft_error("Error\ncomas\n");
 		}
 	}
 	return (coom);
@@ -49,7 +49,7 @@ int	fill_color(char *line, t_color *color, int *success)
 	if (color->id[0] != '\0')
 		return (-1);
 	if (coom_counter(line) != 2)
-		ft_error("u hav been coomed(comas)\n");
+		ft_error("Error\ncomas\n");
 	ft_strcpy(color->id, ft_strtok(line, " "));
 	while (i < 3)
 	{

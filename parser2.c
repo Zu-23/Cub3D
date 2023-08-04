@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:28:40 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/02 19:06:44 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/04 19:45:07 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_error(char *str)
 {
-	perror(str);
+	printf("%s", str);
 	exit(1);
 }
 
