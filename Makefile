@@ -6,12 +6,12 @@
 #    By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/25 16:27:08 by zhaddoum          #+#    #+#              #
-#    Updated: 2023/08/02 19:31:44 by alemsafi         ###   ########.fr        #
+#    Updated: 2023/08/04 15:54:10 by alemsafi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-NAME :=		cube3D
+NAME :=	cub3D
 
 LIBFT_SRCS = $(shell cat lib_gnl/lib/Makefile | grep "SRCS " | cut -d '=' -f 2)
 
@@ -19,15 +19,15 @@ LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)
 
 OBJS_DIR = objs/
 
-CC :=		gcc
-CFLAGS :=	-Wall -Wextra -Werror -g
-LIBS :=		-L$(DIR) -lmlx -lm -lX11 -lXext
-LIBS2 :=	-lmlx -framework OpenGL -framework AppKit
-LIBFT :=	lib_gnl/lib/libft.a
-GNL	:=		get_next_line.o
-SRC :=		parser.c main.c rendering.c raycaster.c hooks.c movements.c rendering2.c \
+CC := cc
+CFLAGS := -Wall -Wextra -Werror
+LIBS :=	-L$(DIR) -lmlx -lm -lX11 -lXext
+LIBS2 := -lmlx -framework OpenGL -framework AppKit
+LIBFT := lib_gnl/lib/libft.a
+GNL	:= get_next_line.o
+SRC := parser.c main.c rendering.c raycaster.c hooks.c movements.c rendering2.c \
 parser2.c parser3.c raycaster2.c get_next_line.c parser4.c
-OBJ	:=		$(SRC:.c=.o)
+OBJ	:= $(SRC:.c=.o)
 
 LIB_OBJ_DIR := $(addprefix lib_gnl/lib/, $(LIBFT_OBJS))
 OBJ_DIR := $(addprefix objs/, $(OBJ))

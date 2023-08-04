@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:27:34 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/02 23:07:51 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/04 15:54:34 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,5 +130,7 @@ int	check_player_position(t_data *data)
 		var.j++;
 		var.i = 0;
 	}
+	if (p_pos == 0)
+		return (-1);
 	return (0);
 }
