@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:35:27 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/25 20:17:42 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/05 23:45:06 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 		ray->cos_ang = 0.001;
 	ray->tan_ang = ray->sin_ang / ray->cos_ang;
 	if (-ray->sin_ang < 0)
-		ray->hy = (data->py / GRID) * GRID - 0.001;
+		ray->hy = ((int)data->py / GRID) * GRID - 0.001;
 	else
-		ray->hy = (data->py / GRID) * GRID + GRID;
+		ray->hy = ((int)data->py / GRID) * GRID + GRID;
 	ray->hx = data->px + (data->py - ray->hy) / ray->tan_ang;
 	if (ray->cos_ang < 0)
-		ray->vx = (data->px / GRID) * GRID - 0.001;
+		ray->vx = ((int)data->px / GRID) * GRID - 0.001;
 	else
-		ray->vx = (data->px / GRID) * GRID + GRID;
+		ray->vx = ((int)data->px / GRID) * GRID + GRID;
 	ray->vy = data->py + (data->px - ray->vx) * ray->tan_ang;
 	ray->next_h = fabs(GRID / ray->sin_ang);
 	ray->next_v = fabs(GRID / ray->cos_ang);
