@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rendering2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 23:55:38 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/30 16:54:31 by zhaddoum         ###   ########.fr       */
+/*   Updated: 2023/08/05 23:25:01 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ void	get_textures(t_data *data)
 	data->ea.img = mlx_xpm_file_to_image(data->mlx, data->ea.dest,
 			&data->ea.width, &data->ea.height);
 	if (!data->no.img || !data->so.img || !data->we.img || !data->ea.img)
-	{
-		printf("Error\nInvalid texture path\n");
-		exit(1);
-	}
+		ft_error("Error\nInvalid texture path\n");
 	data->ea.addr = mlx_get_data_addr(data->ea.img, &data->ea.bits_per_pixel,
 			&data->ea.line_length, &data->ea.endian);
 	data->we.addr = mlx_get_data_addr(data->we.img, &data->we.bits_per_pixel,

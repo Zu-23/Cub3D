@@ -6,11 +6,29 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:56:49 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/27 15:48:29 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/06 00:23:26 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cub3d.h"
+
+void	parse_textures(t_data *data)
+{
+	int	i;
+
+	i = open(data->no.dest, O_RDONLY);
+	if (i == -1)
+		ft_error("Error\nwrong north texture path\n");
+	i = open(data->so.dest, O_RDONLY);
+	if (i == -1)
+		ft_error("Error\nwrong south texture path\n");
+	i = open(data->ea.dest, O_RDONLY);
+	if (i == -1)
+		ft_error("Error\nwrong east texture path\n");
+	i = open(data->we.dest, O_RDONLY);
+	if (i == -1)
+		ft_error("Error\nwrong west texture path\n");
+}
 
 int	main(int ac, char **av)
 {
@@ -26,6 +44,7 @@ int	main(int ac, char **av)
 		parse_file(fd, &data);
 		check_data(&data);
 		find_player_location(&data);
+		parse_textures(&data);
 		render(&data);
 	}
 	else
