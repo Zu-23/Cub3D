@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:36:10 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/08/02 19:31:49 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/05 21:47:10 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define ESC 53
 # define GRID 64
 # define MAP_GRID 8
-# define TEXTURE_SCALE 12
+# define TEXTURE_SCALE 32
 # define PLANE_HEIGHT 1024
 # define PLANE_WIDTH 1024
 # define PLAYER_DISTANCE 886.81
