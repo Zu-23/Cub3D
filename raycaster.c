@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:34:45 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/07/26 15:05:59 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/05 21:56:29 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,19 +77,19 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	{
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so,
-					(int)(wall->wall_x * TEXTURE_SCALE) % data->so.width, (int)
+					(int)(wall->wall_x * data->so.width / GRID) % data->so.width, (int)
 					(((i + shift) / wall_height) * data->so.height)));
 		else if (ray->dist_h <= ray->dist_v && ray->sin_ang > 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no,
-					(int)(wall->wall_x * TEXTURE_SCALE) % data->no.width, (int)
+					(int)(wall->wall_x * data->no.width / GRID) % data->no.width, (int)
 					(((i + shift) / wall_height) * data->no.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang < 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea,
-					(int)(wall->wall_y * TEXTURE_SCALE) % data->ea.width, (int)
+					(int)(wall->wall_y * data->ea.width / GRID) % data->ea.width, (int)
 					(((i + shift) / wall_height) * data->ea.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang > 0)
 			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we,
-					(int)(wall->wall_y * TEXTURE_SCALE) % data->we.width, (int)
+					(int)(wall->wall_y * data->we.width / GRID) % data->we.width, (int)
 					(((i + shift) / wall_height) * data->we.height)));
 	}
 }
