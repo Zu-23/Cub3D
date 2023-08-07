@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycaster2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:35:27 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/08/05 23:45:06 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:16:56 by zhaddoum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,12 @@ int	find_intersection(double iter_ray, int column, t_data *data, t_rcst *ray)
 
 void	horizontal_intersection(t_data *data, t_rcst *ray, t_wall *wall)
 {
-	if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1')
+	if ((int)ray->hy / GRID >= data->height)
+		ray->hy = (data->height - 1) * GRID;
+	if ((int)ray->hx / GRID >= (int)ft_strlen(data->map[(int)ray->hy / GRID]))
+		ray->hx = (ft_strlen(data->map[(int)ray->hy / GRID]) - 1) * GRID;
+	if (data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == '1' ||
+		data->map[(int)ray->hy / GRID][(int)ray->hx / GRID] == ' ')
 	{
 		wall->hit = 1;
 		wall->wall_x = ray->hx;
@@ -60,7 +65,12 @@ void	horizontal_intersection(t_data *data, t_rcst *ray, t_wall *wall)
 
 void	vertical_intersection(t_data *data, t_rcst *ray, t_wall *wall)
 {
-	if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1')
+	if ((int)ray->vy / GRID >= data->height)
+		ray->vy = (data->height - 1) * GRID;
+	if ((int)ray->vx / GRID >= (int)ft_strlen(data->map[(int)ray->vy / GRID]))
+		ray->vx = (ft_strlen(data->map[(int)ray->vy / GRID]) - 1) * GRID;
+	if (data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == '1' ||
+		data->map[(int)ray->vy / GRID][(int)ray->vx / GRID] == ' ')
 	{
 		wall->hit = 1;
 		wall->wall_x = ray->vx;

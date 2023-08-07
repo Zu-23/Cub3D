@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:27:34 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/04 15:54:34 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/07 15:31:52 by zhaddoum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ int	parse_map(char *line, t_data *data, int flag)
 		&& line[i] == '\n')
 		return (0);
 	if ((flag == 2 && line[i] == '\n') || check_valid_line(line, data))
-		return (-1);
+		return (printf("bruh: %s", line), -1);
 	str = malloc(ft_strlen(line) + 1);
 	if (!str)
 		return (-1);
 	while (line[var.i] && line[var.i] != '\n')
 	{
-		while (line[var.i] == ' ' && var.i++)
+		while (line[var.i] == ' ' && ++var.i)
 			str[var.j++] = ' ';
 		str[var.j++] = line[var.i++];
 	}
@@ -57,13 +57,9 @@ void	no_newline_for_map(t_data *data, int *flag, char *line)
 int	evaluate_parse_functions(char *line, t_data *data)
 {
 	int			success;
-	int			i;
 	static int	flag;
 
 	success = 0;
-	i = 0;
-	while (line[i] == ' ')
-		i++;
 	if (parse_texture(line, data, &success))
 		return (-1);
 	if (success == 1)
@@ -118,7 +114,8 @@ int	check_player_position(t_data *data)
 		{
 			if (data->map[var.j][var.i] != '0'
 				&& data->map[var.j][var.i] != '1'
-				&& data->map[var.j][var.i] != ' ')
+				&& data->map[var.j][var.i] != ' '
+				&& data->map[var.j][var.i] != '\n')
 			{
 				if (p_pos == 0)
 					p_pos = 1;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycaster.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:34:45 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/08/05 21:56:29 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/07 13:06:11 by zhaddoum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	shift;
 
 	(init(&wall_height, &top_wall, &shift, wall), (i = -1));
+	//printf("height: %f, dist: %f\n", wall_height, wall->wall_dist);
 	while (++i < wall_height && top_wall + i < PLANE_HEIGHT)
 	{
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
