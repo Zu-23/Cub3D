@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:27:34 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/07 15:31:52 by zhaddoum         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:30:21 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,11 @@ int	check_player_position(t_data *data)
 	t_var	var;
 	int		p_pos;
 
-	var.i = 0;
-	var.j = 0;
+	var = (t_var){-1, -1, 0};
 	p_pos = 0;
-	while (var.j < data->height)
+	while (++var.j < data->height)
 	{
-		while (data->map[var.j][var.i])
+		while (data->map[var.j][++var.i])
 		{
 			if (data->map[var.j][var.i] != '0'
 				&& data->map[var.j][var.i] != '1'
@@ -122,9 +121,7 @@ int	check_player_position(t_data *data)
 				else
 					return (-1);
 			}
-			var.i++;
 		}
-		var.j++;
 		var.i = 0;
 	}
 	if (p_pos == 0)
