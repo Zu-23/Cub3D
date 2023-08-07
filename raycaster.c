@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycaster.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:34:45 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/08/07 16:23:59 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:39:10 by zhaddoum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,38 +93,6 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 					(int)(((i + shift) / wall_height) * data->we.height)));
 	}
 }
-
-// void	draw_ray(t_data *data, t_wall wall)
-// {
-// 	double	slope;
-// 	double	y_intercept;
-// 	double	px;
-// 	double	py;
-// 	double	tmp;
-// 	double	wall_x;
-// 	double	wall_y;
-
-// 	px = (double)data->px;
-// 	py = (double)data->py;
-// 	wall_x = wall.wall_x;
-// 	wall_y = wall.wall_y;
-// 	slope = (data->py - wall.wall_y) / (data->px - wall.wall_x);
-// 	y_intercept = data->py - slope * data->px;
-// 	if (px >= wall_x)
-// 	{
-// 		tmp = px;
-// 		px = wall_x;
-// 		wall_x = tmp;
-// 		tmp = py;
-// 		py = wall_y;
-// 		wall_y = tmp;
-// 	}
-// 	while (px <= wall_x)
-// 	{
-// 		my_mlx_put_pixel(data, px, slope * px + y_intercept, 0x00FF00);
-// 		px++;
-// 	}
-// }
 
 int	raycasting(t_data *data)
 {
