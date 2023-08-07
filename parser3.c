@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:31:49 by zhaddoum          #+#    #+#             */
-/*   Updated: 2023/08/04 19:43:35 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/08/07 15:56:56 by zhaddoum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,12 @@ int	check_valid_line(char *line, t_data *data)
 
 	i = 0;
 	j = 0;
-	content = "01ESNW ";
+	content = "01ESNW  ";
 	if (!data->ea.id[0] || !data->no.id[0] || !data->so.id[0] || !data->we.id[0]
 		|| !data->c.id[0] || !data->f.id[0])
 		return (-1);
 	while (line[j] && line[j] != '\n')
 	{
-		while (line[j] == ' ')
-			j++;
 		while (content[i] && content[i++] != line[j])
 			;
 		if (content[i] == '\0')
