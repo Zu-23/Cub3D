@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycaster.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhaddoum <zhaddoum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:34:45 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/08/07 13:06:11 by zhaddoum         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:23:59 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,25 +73,24 @@ void	draw_wall(int col, t_rcst *ray, t_data *data, t_wall *wall)
 	double	shift;
 
 	(init(&wall_height, &top_wall, &shift, wall), (i = -1));
-	//printf("height: %f, dist: %f\n", wall_height, wall->wall_dist);
 	while (++i < wall_height && top_wall + i < PLANE_HEIGHT)
 	{
 		if (ray->dist_h <= ray->dist_v && ray->sin_ang < 0)
-			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so,
-					(int)(wall->wall_x * data->so.width / GRID) % data->so.width, (int)
-					(((i + shift) / wall_height) * data->so.height)));
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->so, (int)
+					(wall->wall_x * data->so.width / GRID) % data->so.width,
+					(int)(((i + shift) / wall_height) * data->so.height)));
 		else if (ray->dist_h <= ray->dist_v && ray->sin_ang > 0)
-			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no,
-					(int)(wall->wall_x * data->no.width / GRID) % data->no.width, (int)
-					(((i + shift) / wall_height) * data->no.height)));
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->no, (int)
+					(wall->wall_x * data->no.width / GRID) % data->no.width,
+					(int)(((i + shift) / wall_height) * data->no.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang < 0)
-			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea,
-					(int)(wall->wall_y * data->ea.width / GRID) % data->ea.width, (int)
-					(((i + shift) / wall_height) * data->ea.height)));
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->ea, (int)
+					(wall->wall_y * data->ea.width / GRID) % data->ea.width,
+					(int)(((i + shift) / wall_height) * data->ea.height)));
 		else if (ray->dist_h > ray->dist_v && ray->cos_ang > 0)
-			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we,
-					(int)(wall->wall_y * data->we.width / GRID) % data->we.width, (int)
-					(((i + shift) / wall_height) * data->we.height)));
+			my_mlx_put_pixel(data, col, top_wall + i, get_color(&data->we, (int)
+					(wall->wall_y * data->we.width / GRID) % data->we.width,
+					(int)(((i + shift) / wall_height) * data->we.height)));
 	}
 }
 
