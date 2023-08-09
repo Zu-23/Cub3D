@@ -1,13 +1,13 @@
-F 126, 155, 130 
-C 125, 130, 154
+C 50, 50, 50
+F 100, 100, 100
 
-NO ./wall7.xpm      
+NO ./wall1.xpm      
 
-SO ./wall2.xpm
+SO ./wall3.xpm
 
 
-WE ./wall1.xpm                    
-EA ./wall6.xpm
+WE ./3.xpm                    
+EA ./wall4.xpm
 
 
 
